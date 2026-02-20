@@ -2,6 +2,8 @@
 
 A Go-based stock price service with monitoring, caching, and fault tolerance capabilities.
 
+> **Note:** The Docker image for this service is available at [https://hub.docker.com/r/codyadkinsdev/ping-service](https://hub.docker.com/r/codyadkinsdev/ping-service)
+
 ## Overview
 
 This service provides stock price data through a REST API with built-in observability features and resilience patterns.
