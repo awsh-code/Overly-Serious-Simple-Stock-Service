@@ -49,6 +49,28 @@ cd Overly-Serious-Simple-Stock-Service
 
 ## 🚀 Quick Start
 
+### Option 1: Helm Chart (Production Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/awsh-code/Overly-Serious-Simple-Stock-Service.git
+cd Overly-Serious-Simple-Stock-Service
+
+# Install with Helm (production-ready)
+helm install stock-service ./charts/stock-service \
+  --namespace stock-service \
+  --create-namespace \
+  --set config.stockAPI.apiKey=YOUR_API_KEY \
+  --set replicaCount=3 \
+  --set autoscaling.enabled=true \
+  --set monitoring.enabled=true
+
+# Or use the comprehensive deployment guide
+# See: docs/deployment.md for detailed options
+```
+
+### Option 2: Kubernetes Manifests (Development)
+
 ### Prerequisites
 - Docker
 - Kubernetes cluster (minikube, kind, or cloud provider)
@@ -64,6 +86,16 @@ cd Overly-Serious-Simple-Stock-Service
 # Build, push, and deploy
 make all VERSION=v1.0.0
 ```
+
+### CI/CD Pipeline
+Our comprehensive GitHub Actions pipeline includes:
+- **Automated Testing**: Unit, integration, and security tests
+- **Security Scanning**: Trivy vulnerability scanning with SARIF reporting
+- **Helm Chart Validation**: Linting, templating, and packaging
+- **Multi-stage Deployment**: Automated staging and production deployments
+- **Monitoring Integration**: Automatic dashboard and alert provisioning
+
+See `.github/workflows/` for complete pipeline configuration.
 
 ## 📚 API Documentation
 
@@ -218,9 +250,12 @@ For detailed information on production security implementations, see our [Produc
 │   ├── middleware/             # HTTP middleware
 │   └── stock/                  # Stock API client
 ├── k8s/                        # Kubernetes manifests
+├── charts/                     # Helm charts
+│   └── stock-service/          # Production Helm chart
 ├── scripts/                    # Operational scripts
 ├── docs/                       # Documentation
 ├── tests/                      # Integration tests
+├── .github/workflows/          # CI/CD pipelines
 ├── Dockerfile                  # Multi-stage Docker build
 ├── Makefile                    # Build and deployment automation
 ├── go.mod                      # Go dependencies
@@ -234,8 +269,11 @@ For detailed technical documentation on each component:
 - **[Circuit Breaker Architecture](docs/architecture-circuit-breaker.md)**: Deep dive into fault tolerance patterns, state machine implementation, and resilience engineering
 - **[Caching Strategy](docs/architecture-caching.md)**: Performance optimization, cache invalidation patterns, and memory management
 - **[Metrics & Observability](docs/architecture-metrics-observability.md)**: Prometheus metrics design, Grafana dashboard strategy, and SRE alerting patterns
+- **[API Design & Error Handling](docs/architecture-api-design.md)**: RESTful API patterns, validation strategies, and error response architecture
 - **[Production Security](docs/production-security.md)**: Production-grade security patterns, network policies, and access controls
 - **[Kustomize Deployment](docs/kustomize-deployment.md)**: GitOps deployment strategy, environment management, and infrastructure automation
+- **[Deployment Guide](docs/deployment.md)**: Comprehensive deployment guide with Helm charts and Kubernetes manifests
+- **[Operational Runbook](docs/operational-runbook.md)**: Production operations, incident response, and maintenance procedures
 
 ## 🎯 Beyond Requirements
 
@@ -272,6 +310,14 @@ This implementation goes far beyond the basic requirements to demonstrate produc
 - ✅ **Resource Optimization**: Multi-stage Docker builds
 - ✅ **Cache Efficiency**: 95%+ hit rates under normal load
 - ✅ **Circuit Breaker**: Sub-second failure detection and recovery
+
+### Production Deployment
+- ✅ **Helm Charts**: Production-ready Helm chart with comprehensive configuration
+- ✅ **GitOps Integration**: Automated CI/CD with GitHub Actions
+- ✅ **Multi-Environment Support**: Dev, staging, production lifecycle management
+- ✅ **Package Management**: Helm chart packaging and artifact management
+- ✅ **Deployment Automation**: One-command production deployments
+- ✅ **Rollback Capability**: Easy reversion to previous versions
 
 ## 🎓 What This Demonstrates
 

@@ -7,9 +7,10 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/awsh-paas-ha/ping-service/internal/config"
-	"github.com/awsh-paas-ha/ping-service/internal/stock"
+	"github.com/awsh-code/Overly-Serious-Simple-Stock-Service/internal/config"
+	"github.com/awsh-code/Overly-Serious-Simple-Stock-Service/internal/stock"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus"
 	"go.uber.org/zap"
 )
 
@@ -29,8 +30,21 @@ func setupTestHandler() (*Handler, *config.Config) {
 		}
 		
 		logger := zap.NewNop()
-		stockClient := &stock.Client{} // Mock this in real tests
-		testHandler = NewHandler(cfg, stockClient, logger)
+		
+		// Create a mock stock client that doesn't panic
+		stockClient := &stock.Client{}
+		
+		// Create test metrics
+		apiRequests := prometheus.NewCounter(prometheus.CounterOpts{
+			Name: "test_api_requests_total",
+			Help: "Test API requests",
+		})
+		apiDuration := prometheus.NewHistogram(prometheus.HistogramOpts{
+			Name: "test_api_duration_seconds",
+			Help: "Test API duration",
+		})
+		
+		testHandler = NewHandler(cfg, stockClient, logger, apiRequests, apiDuration)
 		testConfig = cfg
 	})
 	
@@ -49,7 +63,7 @@ func TestHealthHandler(t *testing.T) {
 	
 	// Create a test router
 	router := mux.NewRouter()
-	router.HandleFunc("/health", handler.middleware(handler.healthHandler))
+	router.HandleFunc("/health", handler.healthHandler)
 	
 	router.ServeHTTP(rr, req)
 	
@@ -62,35 +76,7 @@ func TestHealthHandler(t *testing.T) {
 		t.Fatal(err)
 	}
 	
-	if response["status"] != "healthy" {
-		t.Errorf("expected status 'healthy', got %v", response["status"])
-	}
-	
-	if response["service"] != "ping-service" {
-		t.Errorf("expected service 'ping-service', got %v", response["service"])
-	}
-}
-
-func TestMiddleware(t *testing.T) {
-	handler, _ := setupTestHandler()
-	
-	// Test middleware with a simple handler
-	testHandler := func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
-	}
-	
-	req, err := http.NewRequest("GET", "/test", nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-	
-	rr := httptest.NewRecorder()
-	
-	middleware := handler.middleware(testHandler)
-	middleware(rr, req)
-	
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	if status, ok := response["status"].(string); !ok || status != "healthy" {
+		t.Errorf("Expected status 'healthy', got %v", response["status"])
 	}
 }

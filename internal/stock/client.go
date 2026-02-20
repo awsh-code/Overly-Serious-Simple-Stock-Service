@@ -18,6 +18,7 @@ import (
 type Client struct {
 	httpClient          *http.Client
 	apiKey              string
+	apiURL              string
 	logger              *zap.Logger
 	circuitBreaker      *circuitbreaker.CircuitBreaker
 	cache               *cache.Cache
@@ -67,6 +68,7 @@ func NewClient(
 			Timeout: timeout,
 		},
 		apiKey:              apiKey,
+		apiURL:              "https://www.alphavantage.co/query",
 		logger:              logger,
 		circuitBreaker:      circuitBreaker,
 		cache:               cache,
@@ -125,7 +127,7 @@ func (c *Client) fetchStockData(symbol string, ndays int, apiDurationHist promet
 		c.externalCalls.Inc()
 	}()
 
-	url := fmt.Sprintf("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=%s&apikey=%s", symbol, c.apiKey)
+	url := fmt.Sprintf("%s?function=TIME_SERIES_DAILY&symbol=%s&apikey=%s", c.apiURL, symbol, c.apiKey)
 	
 	c.logger.Info("calling Alpha Vantage API", zap.String("url", url))
 	

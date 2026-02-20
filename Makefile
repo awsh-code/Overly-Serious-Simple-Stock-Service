@@ -120,10 +120,28 @@ test:
 	@echo "🧪  Running unit tests..."
 	@go test -v ./...
 
+# Run unit tests with coverage
+test-coverage:
+	@echo "🧪  Running unit tests with coverage..."
+	@go test -coverprofile=coverage.out ./...
+	@echo "📊 Coverage Summary:"
+	@go tool cover -func=coverage.out | tail -n 1
+	@echo "📈 Generate HTML report: go tool cover -html=coverage.out -o coverage.html"
+
 # Run integration tests
 test-integration:
 	@echo "🔗  Running integration tests..."
 	@go test -v -tags=integration ./tests/...
+
+# Run all tests with coverage report
+test-all:
+	@echo "🧪  Running all tests with coverage..."
+	@go test -coverprofile=coverage.out ./...
+	@go test -coverprofile=coverage-integration.out -tags=integration ./tests/...
+	@echo "📊 Unit Test Coverage:"
+	@go tool cover -func=coverage.out | tail -n 1
+	@echo "📊 Integration Test Coverage:"
+	@go tool cover -func=coverage-integration.out | tail -n 1
 
 # Clean up resources
 clean: k8s-delete
@@ -160,7 +178,9 @@ help:
 	@echo "  stress-test      - Run stress test"
 	@echo "  quick-stress     - Run quick stress test"
 	@echo "  test             - Run unit tests"
+	@echo "  test-coverage    - Run unit tests with coverage report"
 	@echo "  test-integration - Run integration tests"
+	@echo "  test-all         - Run all tests with coverage report"
 	@echo "  clean            - Clean up all resources"
 	@echo "  dev-setup        - Setup development environment"
 	@echo "  help             - Show this help message"

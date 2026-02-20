@@ -27,10 +27,10 @@ func main() {
 	cfg := config.Load()
 
 	// Create cache
-	stockCache := cache.New(cfg.CacheTTL)
+	stockCache := cache.NewCache(cfg.CacheTTL)
 
 	// Create circuit breaker
-	cb := circuitbreaker.New(cfg.CircuitBreakerTimeout, logger)
+	cb := circuitbreaker.NewCircuitBreaker(cfg.CircuitBreakerThreshold, cfg.CircuitBreakerSuccessThreshold, cfg.CircuitBreakerTimeout)
 
 	// Create Prometheus metrics
 	cacheHits := prometheus.NewCounter(prometheus.CounterOpts{

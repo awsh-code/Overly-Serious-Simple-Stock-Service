@@ -56,15 +56,16 @@ func (cb *CircuitBreaker) Call(fn func() error) error {
 	cb.mu.Lock()
 	defer cb.mu.Unlock()
 
+	// Check if we should transition from Open to Half-Open
+	if cb.state == StateOpen && time.Since(cb.lastFailureTime) > cb.timeout {
+		cb.state = StateHalfOpen
+		cb.failureCount = 0
+		cb.successCount = 0
+	}
+
 	switch cb.state {
 	case StateOpen:
-		if time.Since(cb.lastFailureTime) > cb.timeout {
-			cb.state = StateHalfOpen
-			cb.failureCount = 0
-			cb.successCount = 0
-		} else {
-			return ErrCircuitBreakerOpen
-		}
+		return ErrCircuitBreakerOpen
 	case StateHalfOpen:
 		err := fn()
 		if err != nil {

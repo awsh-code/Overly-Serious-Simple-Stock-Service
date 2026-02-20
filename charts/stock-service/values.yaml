@@ -1,0 +1,211 @@
+# Default values for stock-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/awsh-code/stock-service
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 2000
+  runAsNonRoot: true
+  runAsUser: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: stock-service.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: stock-service-tls
+  #    hosts:
+  #      - stock-service.local
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Application configuration
+config:
+  # Stock API configuration
+  stockAPI:
+    # API key for stock data service (required)
+    apiKey: ""
+    # Base URL for stock API
+    baseURL: "https://api.twelvedata.com"
+    # Request timeout
+    timeout: 30s
+    # Circuit breaker configuration
+    circuitBreaker:
+      enabled: true
+      failureThreshold: 5
+      successThreshold: 3
+      timeout: 60s
+    # Caching configuration
+    cache:
+      enabled: true
+      ttl: 5m
+      cleanupInterval: 10m
+  
+  # Server configuration
+  server:
+    # Server port
+    port: 8080
+    # Read timeout
+    readTimeout: 30s
+    # Write timeout
+    writeTimeout: 30s
+    # Idle timeout
+    idleTimeout: 120s
+  
+  # Metrics configuration
+  metrics:
+    enabled: true
+    path: /metrics
+  
+  # Health check configuration
+  health:
+    # Liveness probe path
+    livenessPath: /health
+    # Readiness probe path
+    readinessPath: /ready
+    # Startup probe path
+    startupPath: /health
+
+# Secret configuration
+secrets:
+  # Create secret from values
+  create: true
+  # Secret name (if not set, will use fullname)
+  name: ""
+  # Secret data
+  data:
+    # Stock API key (base64 encoded)
+    stockApiKey: ""
+
+# Monitoring configuration
+monitoring:
+  # Enable Prometheus monitoring
+  enabled: true
+  # ServiceMonitor configuration
+  serviceMonitor:
+    enabled: false
+    namespace: ""
+    interval: 30s
+    scrapeTimeout: 10s
+    labels: {}
+    annotations: {}
+  # PrometheusRule configuration
+  prometheusRule:
+    enabled: false
+    namespace: ""
+    labels: {}
+    groups: []
+
+# Network policies
+networkPolicy:
+  enabled: false
+  ingress: []
+  egress: []
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+  maxUnavailable: ""
+
+# Probes configuration
+probes:
+  liveness:
+    enabled: true
+    path: /health
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
+  readiness:
+    enabled: true
+    path: /ready
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 3
+  startup:
+    enabled: true
+    path: /health
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    successThreshold: 1
+    failureThreshold: 30
+
+# Environment variables
+env: []
+  # - name: LOG_LEVEL
+  #   value: "info"
+  # - name: DEBUG
+  #   value: "false"
+
+# Extra volumes
+extraVolumes: []
+
+# Extra volume mounts
+extraVolumeMounts: []
