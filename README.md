@@ -77,6 +77,17 @@ This isn't just a simple stock service - it's a **complete demonstration of prod
 
 ## 🏗️ Architecture
 
+### 🎯 Production Deployment Patterns
+This service demonstrates enterprise-grade deployment patterns that go beyond basic Kubernetes manifests:
+
+- **Kustomize-Based GitOps**: Declarative infrastructure management with environment-specific overlays
+- **Security-First Design**: API keys in Kubernetes secrets, network policies, and audit logging
+- **Observability Integration**: Built-in Prometheus metrics and Grafana dashboards
+- **Progressive Delivery**: Rolling updates with health checks and automatic rollback
+- **Multi-Environment Strategy**: Separate configurations for dev, staging, and production
+
+See our detailed documentation for [Production Security](docs/production-security.md) and [Kustomize Deployment](docs/kustomize-deployment.md) patterns.
+
 ### System Architecture
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
@@ -292,6 +303,14 @@ The service includes:
 - **Secret** for API keys
 - **HPA** for auto-scaling
 
+### 🎯 Kustomize Deployment Strategy
+For comprehensive Kustomize deployment patterns and production-ready overlays, see our [Kustomize Deployment Documentation](docs/kustomize-deployment.md) which covers:
+- **Environment Management**: Dev, staging, and production overlays
+- **GitOps Integration**: Automated deployments with ArgoCD
+- **Configuration Management**: ConfigMap and Secret transformations
+- **Advanced Patterns**: Component-based architecture and remote bases
+- **Secret Management**: SOPS integration for encrypted secrets
+
 ## 🧪 Testing
 
 ### Unit Tests
@@ -325,6 +344,14 @@ Based on load testing with the included stress scripts:
 - Resource limits and requests configured
 - Network policies ready for implementation
 - No sensitive data in logs or metrics
+
+### 🔐 Production Security Patterns
+For detailed information on production security implementations, see our [Production Security Documentation](docs/production-security.md) which covers:
+- **Monitoring Access Controls**: How to secure Grafana/Prometheus in production
+- **Network Security**: Network policies and service mesh integration
+- **Secret Management**: Advanced patterns with External Secrets Operator
+- **Rate Limiting & DDoS Protection**: Production-grade ingress configurations
+- **Audit Logging**: Comprehensive audit trails for compliance
 
 ## 🚀 Scalability
 
@@ -406,6 +433,8 @@ This implementation goes far beyond the basic requirements to demonstrate produc
 - ✅ **Environment Management**: Separate configs for dev/staging/prod
 - ✅ **Documentation**: Comprehensive setup and operational guides
 - ✅ **Scalar Integration**: Beautiful, interactive API documentation
+- ✅ **Kustomize Patterns**: Production-ready GitOps deployment strategy
+- ✅ **Security Documentation**: Production security patterns and access controls
 
 ## 🎓 What This Demonstrates
 
@@ -422,6 +451,9 @@ This project showcases skills across the full SRE spectrum:
 - Infrastructure as Code (Kustomize)
 - Monitoring and alerting setup
 - Performance optimization and capacity planning
+- **GitOps and Progressive Delivery**: Automated deployments with rollback
+- **Multi-Environment Strategy**: Dev, staging, production lifecycle management
+- **Security-First Operations**: Secrets management, network policies, audit logging
 
 ### Reliability Engineering
 - Fault tolerance design patterns
