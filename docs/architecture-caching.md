@@ -182,7 +182,7 @@ Based on production monitoring:
 - ❌ Additional infrastructure to manage
 - ❌ More complex deployment
 
-**Staff SRE Decision**: In-memory caching chosen for operational simplicity and reduced complexity, appropriate for this service's scale and requirements.
+**Decision**: In-memory caching chosen for operational simplicity and reduced complexity, appropriate for this service's scale and requirements.
 
 ### Database Query Caching
 

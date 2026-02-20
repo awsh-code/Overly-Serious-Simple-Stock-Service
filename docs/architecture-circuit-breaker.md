@@ -192,24 +192,13 @@ func updateCircuitBreakerMetrics(state circuitbreaker.State) {
 
 ## Comparison with Other Implementations
 
-### Netflix Hystrix Style
+### Decision Choice
 - **Our Approach**: Simpler, lighter, Go-native
-- **Hystrix**: Bulkhead isolation, request caching
-- **Trade-off**: We prioritize simplicity and performance
-
-### Envoy Proxy Circuit Breaker
-- **Our Approach**: Application-level control
-- **Envoy**: Network-level, language-agnostic
-- **Trade-off**: We provide business logic integration
-
-### Go-Kit Circuit Breaker
-- **Our Approach**: Standalone, no external dependencies
-- **Go-Kit**: Framework integration required
-- **Trade-off**: We maximize reusability
+- **Everything Else**: Complex and not suited for the goals of this project or traffic expectations.
 
 ## Best Practices and Lessons Learned
 
-### Configuration Tuning
+### Configuration Choices
 1. **Start Conservative**: Higher failure thresholds initially
 2. **Monitor Recovery**: Adjust timeout based on external service behavior
 3. **Test Failure Scenarios**: Validate behavior under controlled conditions
@@ -221,7 +210,7 @@ func updateCircuitBreakerMetrics(state circuitbreaker.State) {
 3. **Graceful Degradation**: Provide fallback behavior when circuit opens
 4. **Metrics First**: Always expose circuit breaker metrics for monitoring
 
-### Common Pitfalls
+### Realworld Pitfalls
 1. **Sharing Circuit Breakers**: Different services need different thresholds
 2. **Ignoring Metrics**: Circuit breaker behavior must be monitored
 3. **Too Aggressive Thresholds**: Can cause unnecessary service degradation
@@ -263,11 +252,17 @@ curl http://localhost:8080/circuit-breaker
 - Prevents one failing endpoint from affecting others
 
 ### Adaptive Thresholds
-- Machine learning-based threshold adjustment
+- Machine learning-based threshold adjustment ($$ expensive $$)
 - Dynamic failure rate detection
-- Automatic tuning based on service behavior
+- Automatic tuning based on service behavior ($$ complex $$)
 
 ### Request Batching
 - Bulk request processing in HALF-OPEN state
 - Reduces external API load during recovery testing
 - Improves overall system efficiency
+
+
+### Bottom Line
+- **Simple Yet Effective**: Effective for the goals of this project
+- **Cost-effective**: No external dependencies or complex configurations
+- **Scalable**: Handles high traffic volumes with minimal overhead

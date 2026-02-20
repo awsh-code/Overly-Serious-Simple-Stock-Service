@@ -179,10 +179,5 @@ kubectl describe networkpolicy -n stock-service
 - Same monitoring, **secure access patterns**
 - Same resilience, **hardened infrastructure**
 
-This architecture proves understanding of:
-- **Defense in depth**
-- **Principle of least privilege**
-- **Secure by design**
-- **Operational security**
 
-**Key Takeaway**: A Staff SRE doesn't just build working systems—they build **secure, observable, and maintainable platforms** that protect both the application and the organization.
+**Key Takeaway**: Build **secure, observable, and maintainable platforms** that protect both the application and the organization.

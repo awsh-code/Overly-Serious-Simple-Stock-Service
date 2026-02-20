@@ -2,6 +2,8 @@
 
 This runbook provides operational procedures for maintaining and troubleshooting the Overly Serious Simple Stock Service in production.
 
+## (Gemini went a little wild with this but here we go.)
+
 ## Table of Contents
 
 - [Service Overview](#service-overview)

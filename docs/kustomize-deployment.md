@@ -46,7 +46,7 @@ k8s/
         └── pod-security-policy.yaml
 ```
 
-## 🎯 Base Configuration (GitOps Ready)
+## Base Configuration (GitOps Ready)
 
 ### `k8s/base/kustomization.yaml`
 ```yaml
@@ -230,7 +230,9 @@ images:
   digest: sha256:abc123...  # Pin to specific digest
 ```
 
-## 🚀 Benefits for Staff SRE Role
+## Benefits of this approach.
+
+## 0. **Plumi is a headache, so kustomize is the next best option for declarative configuration management.**
 
 ### 1. **Configuration as Code**
 - All changes tracked in Git
@@ -252,7 +254,7 @@ images:
 - Clear resource ownership and labeling
 - Integrated monitoring and alerting
 
-## 🎯 Interview Talking Points
+## Further Considerations
 
 **When discussing Kustomize vs Helm**:
 - "Kustomize provides **declarative configuration management** without the complexity of templating"
