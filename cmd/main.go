@@ -34,35 +34,43 @@ func main() {
 
 	// Create Prometheus metrics
 	cacheHits := prometheus.NewCounter(prometheus.CounterOpts{
-		Name: "stock_api_cache_hits_total",
+		Name: "ping_service_cache_hits_total",
 		Help: "Total number of cache hits",
 	})
 	cacheMisses := prometheus.NewCounter(prometheus.CounterOpts{
-		Name: "stock_api_cache_misses_total",
+		Name: "ping_service_cache_misses_total",
 		Help: "Total number of cache misses",
 	})
 	externalCalls := prometheus.NewCounter(prometheus.CounterOpts{
-		Name: "stock_api_external_calls_total",
+		Name: "ping_service_external_calls_total",
 		Help: "Total number of external API calls",
 	})
 	externalCallDuration := prometheus.NewHistogram(prometheus.HistogramOpts{
-		Name:    "stock_api_external_call_duration_seconds",
+		Name:    "ping_service_external_call_duration_seconds",
 		Help:    "Duration of external API calls in seconds",
 		Buckets: prometheus.DefBuckets,
 	})
 	circuitBreakerState := prometheus.NewGauge(prometheus.GaugeOpts{
-		Name: "stock_api_circuit_breaker_state",
+		Name: "ping_service_circuit_breaker_state",
 		Help: "Circuit breaker state (0=closed, 1=open, 2=half-open)",
 	})
 	apiRequests := prometheus.NewCounter(prometheus.CounterOpts{
-		Name: "stock_api_requests_total",
+		Name: "ping_service_api_requests_total",
 		Help: "Total number of API requests",
 	})
 	apiDuration := prometheus.NewHistogram(prometheus.HistogramOpts{
-		Name:    "stock_api_request_duration_seconds",
+		Name:    "ping_service_api_request_duration_seconds",
 		Help:    "Duration of API requests in seconds",
 		Buckets: prometheus.DefBuckets,
 	})
+	externalApiLatency := prometheus.NewHistogramVec(
+		prometheus.HistogramOpts{
+			Name:    "stock_api_external_call_latency_seconds",
+			Help:    "Latency of external API calls to the stock service.",
+			Buckets: prometheus.DefBuckets,
+		},
+		[]string{"endpoint"},
+	)
 
 	// Register all metrics
 	prometheus.MustRegister(
@@ -73,6 +81,7 @@ func main() {
 		circuitBreakerState,
 		apiRequests,
 		apiDuration,
+		externalApiLatency,
 	)
 
 	// Create stock client with all dependencies
@@ -87,6 +96,7 @@ func main() {
 		externalCalls,
 		externalCallDuration,
 		circuitBreakerState,
+		externalApiLatency,
 	)
 
 	// Create handler

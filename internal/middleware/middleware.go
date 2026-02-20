@@ -16,7 +16,7 @@ var (
 			Name: "ping_service_request_duration_seconds",
 			Help: "Duration of HTTP requests in seconds",
 		},
-		[]string{"method", "endpoint", "status"},
+		[]string{"method", "endpoint", "code"},
 	)
 
 	requestCount = prometheus.NewCounterVec(
@@ -24,7 +24,7 @@ var (
 			Name: "ping_service_requests_total",
 			Help: "Total number of HTTP requests",
 		},
-		[]string{"method", "endpoint", "status"},
+		[]string{"method", "endpoint", "code"},
 	)
 )
 
@@ -57,10 +57,10 @@ func Metrics(next http.Handler) http.Handler {
 		path, _ := route.GetPathTemplate()
 
 		duration := time.Since(start).Seconds()
-		status := strconv.Itoa(lrw.statusCode)
+		code := strconv.Itoa(lrw.statusCode)
 
-		requestDuration.WithLabelValues(r.Method, path, status).Observe(duration)
-		requestCount.WithLabelValues(r.Method, path, status).Inc()
+		requestDuration.WithLabelValues(r.Method, path, code).Observe(duration)
+		requestCount.WithLabelValues(r.Method, path, code).Inc()
 	})
 }
 

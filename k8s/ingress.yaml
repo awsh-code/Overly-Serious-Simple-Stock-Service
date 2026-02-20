@@ -4,11 +4,18 @@ metadata:
   name: stock-service-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - stock-service.yourdomain.com
+    secretName: stock-service-tls
   rules:
-  - http:
+  - host: stock-service.yourdomain.com
+    http:
       paths:
-      - path: /stock
+      - path: /
         pathType: Prefix
         backend:
           service:

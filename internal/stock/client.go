@@ -27,6 +27,7 @@ type Client struct {
 	externalCalls       prometheus.Counter
 	externalCallDuration prometheus.Histogram
 	circuitBreakerState prometheus.Gauge
+	externalApiLatency  *prometheus.HistogramVec
 }
 
 type StockData struct {
@@ -62,6 +63,7 @@ func NewClient(
 	externalCalls prometheus.Counter,
 	externalCallDuration prometheus.Histogram,
 	circuitBreakerState prometheus.Gauge,
+	externalApiLatency *prometheus.HistogramVec,
 ) *Client {
 	return &Client{
 		httpClient: &http.Client{
@@ -77,6 +79,7 @@ func NewClient(
 		externalCalls:       externalCalls,
 		externalCallDuration: externalCallDuration,
 		circuitBreakerState: circuitBreakerState,
+		externalApiLatency:  externalApiLatency,
 	}
 }
 
@@ -125,6 +128,7 @@ func (c *Client) fetchStockData(symbol string, ndays int, apiDurationHist promet
 	defer func() {
 		c.externalCallDuration.Observe(time.Since(start).Seconds())
 		c.externalCalls.Inc()
+		c.externalApiLatency.WithLabelValues("alphavantage").Observe(time.Since(start).Seconds())
 	}()
 
 	url := fmt.Sprintf("%s?function=TIME_SERIES_DAILY&symbol=%s&apikey=%s", c.apiURL, symbol, c.apiKey)
