@@ -2,6 +2,31 @@
 
 A production-grade stock ticker microservice that demonstrates SRE excellence, resilience patterns, and operational maturity. This service provides stock price data with enterprise-level monitoring, caching, and fault tolerance.
 
+## 🌐 Live Demo
+
+**🚀 See it in action on our production cluster:**
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Stock Service** | [http://ping-service.46.225.33.158.nip.io](http://ping-service.46.225.33.158.nip.io) | Main API endpoint |
+| **Stock Service (MSFT)** | [http://ping-service.46.225.33.158.nip.io/MSFT](http://ping-service.46.225.33.158.nip.io/MSFT) | Default stock data |
+| **Stock Service (AAPL)** | [http://ping-service.46.225.33.158.nip.io/AAPL/30](http://ping-service.46.225.33.158.nip.io/AAPL/30) | Apple stock, 30 days |
+| **Scalar Documentation** | [http://ping-service.46.225.33.158.nip.io/docs](http://ping-service.46.225.33.158.nip.io/docs) | Interactive API docs |
+| **Prometheus Metrics** | [http://ping-service.46.225.33.158.nip.io/metrics](http://ping-service.46.225.33.158.nip.io/metrics) | Live metrics |
+| **Health Check** | [http://ping-service.46.225.33.158.nip.io/health](http://ping-service.46.225.33.158.nip.io/health) | Service health |
+| **Grafana Dashboard** | [http://46.225.33.158.nip.io:3001](http://46.225.33.158.nip.io:3001) | Monitoring dashboard |
+
+**📊 Try our stress testing:**
+```bash
+# Quick 60-second load test
+curl -s http://ping-service.46.225.33.158.nip.io/metrics | grep cache
+
+# Full stress test (clone repo first)
+git clone https://github.com/awsh-code/Overly-Serious-Simple-Stock-Service.git
+cd Overly-Serious-Simple-Stock-Service
+./scripts/quick-stress.sh
+```
+
 ## 🚀 What Makes This Special
 
 This isn't just a simple stock service - it's a **complete demonstration of production-ready microservice architecture** that showcases:
