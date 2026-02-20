@@ -1,0 +1,62 @@
+# Build artifacts
+*.tgz
+coverage.out
+coverage.html
+*.test
+*.prof
+*.log
+
+# Build directories
+bin/
+dist/
+build/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Environment files
+.env
+.env.local
+
+# Local development files
+local/
+dev/
+
+# Cache directories
+.cache/
+node_modules/
+
+# Git files
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+!docs/*.md
+
+# CI/CD files
+.github/
+.gitlab-ci.yml
+Jenkinsfile
+
+# Kubernetes files
+*.yaml
+*.yml
+!charts/stock-service/templates/*.yaml
+!charts/stock-service/*.yaml
