@@ -8,16 +8,37 @@ A production-grade stock ticker microservice that demonstrates SRE excellence, r
 
 | Service | URL | Description |
 |---------|-----|-------------|
+### 🚀 API Endpoints
+| Service | URL | Description |
+|---------|-----|-------------|
 | **Stock Service**      | [http://ping-service.46.225.33.158.nip.io/](http://ping-service.46.225.33.158.nip.io/) | Main API endpoint (default: MSFT) |
 | **Scalar Docs**        | [http://ping-service.46.225.33.158.nip.io/docs](http://ping-service.46.225.33.158.nip.io/docs) | Interactive API docs |
 | **Prometheus Metrics**   | [http://ping-service.46.225.33.158.nip.io/metrics](http://ping-service.46.225.33.158.nip.io/metrics) | Live application metrics |
 | **Health Check**         | [http://ping-service.46.225.33.158.nip.io/health](http://ping-service.46.225.33.158.nip.io/health) | Service liveness probe |
 | **Circuit Breaker**      | [http://ping-service.46.225.33.158.nip.io/circuit-breaker](http://ping-service.46.225.33.158.nip.io/circuit-breaker) | Circuit Breaker Status |
-| **Grafana Dashboard**    | [http://grafana.46.225.33.158.nip.io](http://grafana.46.225.33.158.nip.io) | Live monitoring dashboard |
-| **Golden Signals**       | [http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals](http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals) | Golden Signals Dashboard |
-| **Ping Service Metrics** | [http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard](http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard) | Detailed Service Metrics |
 
-**🔐 Demo Credentials** (Grafana): `demo` / `mJolOtJL8o5Umhu5tmqIya`
+### 📊 Observability & Monitoring
+| Dashboard | URL | Description |
+|-----------|-----|-------------|
+| **Grafana Main**         | [http://grafana.46.225.33.158.nip.io](http://grafana.46.225.33.158.nip.io) | Main Grafana interface |
+| **Golden Signals**       | [http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals](http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals) | **The Four Golden Signals** |
+| **Service Metrics**      | [http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard](http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard) | Detailed service performance |
+
+**🔐 Demo Credentials**: `demo` / `mJolOtJL8o5Umhu5tmqIya`
+
+#### 🎯 What are the Four Golden Signals?
+The **Golden Signals** are the four most important metrics for monitoring any production system, as defined by Google's SRE practices:
+
+- **Latency**: How long requests take to complete (including errors)
+- **Traffic**: How many requests per second your system is handling
+- **Errors**: The rate of failed requests (4xx, 5xx, timeouts)
+- **Saturation**: How close your system is to being overloaded (CPU, memory, disk, network)
+
+These signals provide a complete picture of system health and are essential for:
+- **Capacity Planning**: Understanding when to scale
+- **Incident Response**: Quickly identifying what's broken
+- **Performance Optimization**: Finding bottlenecks
+- **SLA Compliance**: Meeting service level objectives
 
 **📊 Try our stress testing:**
 ```bash
