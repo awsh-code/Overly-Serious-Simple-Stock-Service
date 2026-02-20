@@ -79,6 +79,39 @@ Access interactive API documentation at: `http://localhost:8080/docs`
 - `GET /docs` - Interactive documentation
 - `GET /circuit-breaker` - Circuit breaker status
 
+## Demo & Monitoring
+
+When deployed to the cluster, the following endpoints are available:
+
+### Service Endpoints
+- **Stock API**: `http://stock-service.your-cluster.com/`
+- **Health Check**: `http://stock-service.your-cluster.com/health`
+- **Metrics**: `http://stock-service.your-cluster.com/metrics`
+- **API Docs**: `http://stock-service.your-cluster.com/docs`
+
+### Monitoring Dashboards
+- **Grafana**: `http://grafana.your-cluster.com` (admin/admin)
+- **Prometheus**: `http://prometheus.your-cluster.com`
+- **Service Dashboard**: Pre-configured dashboard for stock service metrics
+
+### Testing the Service
+```bash
+# Test the stock API
+curl http://stock-service.your-cluster.com/AAPL
+
+# Check circuit breaker status
+curl http://stock-service.your-cluster.com/circuit-breaker
+
+# View metrics
+curl http://stock-service.your-cluster.com/metrics
+```
+
+### Load Testing
+```bash
+# Run stress test with 100 concurrent users
+make stress-test CONCURRENT=100 DURATION=60s URL=http://stock-service.your-cluster.com
+```
+
 ## Architecture
 
 This service follows a standard microservice architecture with load balancing, service logic, and external API integration. Includes monitoring with Prometheus and Grafana.
