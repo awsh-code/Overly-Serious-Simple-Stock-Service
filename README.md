@@ -237,7 +237,7 @@ See [Production Security Documentation](docs/production-security.md) for:
 └── README.md                   # This file
 ```
 
-## Architecture Documentation
+## Architecture Documentation (Gemini Enhanced and Probably Overly Exhaustive)
 
 For detailed technical documentation on each component:
 
@@ -252,45 +252,18 @@ For detailed technical documentation on each component:
 
 ## Additional Features
 
-### Resilience Engineering
+### Documentation / Playground
+
+- Using Scalar at http://localhost:8080/docs
+
+### Resilience
 - Circuit Breaker: Prevents cascading failures with state monitoring
 - Caching Layer: In-memory caching with cache hit/miss metrics
-- Health Checks: Kubernetes-native liveness/readiness probes
-- Graceful Degradation: Service continues with cached data if external API fails
-- Timeout Protection: All external calls have configurable timeouts
-- Retry Logic: Configurable retry attempts for transient failures
 
 ### Observability
-- Metrics: Comprehensive Prometheus metrics for all operations
-- Dashboards: Pre-built Grafana dashboards for visualization
-- Alerting: Metrics structured for easy alerting rules
-- Distributed Tracing: Ready for OpenTelemetry integration
-- Structured Logging: Zap-based logging with correlation IDs
+- Comprehensive metrics collection and alerting
+- Grafana dashboards for real-time performance monitoring
 
-### Operational Features
-- One-Command Deploy: Complete automation with Make
-- Rolling Updates: Zero-downtime deployments
-- Rollback Capability: Easy reversion to previous versions
-- Environment Management: Separate configs for dev/staging/prod
-- Documentation: Comprehensive setup and operational guides
-- Scalar Integration: Interactive API documentation
-- Kustomize Patterns: GitOps deployment strategy
-- Security Documentation: Production security patterns and access controls
-
-### Performance Engineering
-- Load Testing: Included stress testing scripts
-- Horizontal Scaling: HPA with CPU/memory-based scaling
-- Resource Optimization: Multi-stage Docker builds
-- Cache Efficiency: 95%+ hit rates under normal load
-- Circuit Breaker: Sub-second failure detection and recovery
-
-### Production Deployment
-- Helm Charts: Helm chart with comprehensive configuration
-- GitOps Integration: Automated CI/CD with GitHub Actions
-- Multi-Environment Support: Dev, staging, production lifecycle management
-- Package Management: Helm chart packaging and artifact management
-- Deployment Automation: One-command production deployments
-- Rollback Capability: Easy reversion to previous versions
 
 ## Technical Overview
 
@@ -298,8 +271,8 @@ This project demonstrates a production-ready microservice with comprehensive mon
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit issues and pull requests.
+Fork it and submit pull requests!
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+If this project helps you reduce time to market, please give it a star!
