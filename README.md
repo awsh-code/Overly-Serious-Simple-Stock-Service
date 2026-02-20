@@ -1,6 +1,6 @@
 # Overly-Serious-Simple-Stock-Service
 
-A production-grade stock ticker microservice that demonstrates SRE excellence, resilience patterns, and operational maturity. This service provides stock price data with enterprise-level monitoring, caching, and fault tolerance.
+A production-grade stock ticker microservice that provides stock price data with built-in monitoring, caching, and fault tolerance.
 
 ## 🌐 Live Demo
 
@@ -23,7 +23,7 @@ A production-grade stock ticker microservice that demonstrates SRE excellence, r
 | **Service Metrics**      | [http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard](http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard) | Detailed service performance | `demo` / `mJolOtJL8o5Umhu5tmqIya` |
 
 #### 🎯 What are the Four Golden Signals?
-The **Golden Signals** are the four most important metrics for monitoring any production system, as defined by Google's SRE practices:
+The **Golden Signals** are the four most important metrics for monitoring any production system:
 
 - **Latency**: How long requests take to complete (including errors)
 - **Traffic**: How many requests per second your system is handling  
@@ -113,16 +113,7 @@ Access beautiful, interactive API documentation at: `http://localhost:8080/docs`
 
 ## 🏗️ Architecture
 
-### 🎯 Production Deployment Patterns
-This service demonstrates enterprise-grade deployment patterns that go beyond basic Kubernetes manifests:
-
-- **Kustomize-Based GitOps**: Declarative infrastructure management with environment-specific overlays
-- **Security-First Design**: API keys in Kubernetes secrets, network policies, and audit logging
-- **Observability Integration**: Built-in Prometheus metrics and Grafana dashboards
-- **Progressive Delivery**: Rolling updates with health checks and automatic rollback
-- **Multi-Environment Strategy**: Separate configurations for dev, staging, and production
-
-See our detailed documentation for [Production Security](docs/production-security.md) and [Kustomize Deployment](docs/kustomize-deployment.md) patterns.
+This service follows a standard microservice architecture, with a load balancer, the service itself, and an external API dependency. It also includes built-in monitoring with Prometheus and Grafana.
 
 ### System Architecture
 ```
@@ -141,13 +132,10 @@ See our detailed documentation for [Production Security](docs/production-securit
 
 ## 📊 Features
 
-### Core Functionality
 - **Stock Price API**: Get up to NDAYS of closing prices for any stock symbol
 - **Average Calculation**: Automatically calculates average closing price
 - **Environment Configuration**: SYMBOL and NDAYS configurable via environment variables
 - **API Key Management**: Secure API key handling via Kubernetes secrets
-
-### Production Features (Beyond Requirements)
 - **Caching Layer**: In-memory caching with cache hit/miss metrics
 - **Circuit Breaker**: Prevents cascading failures with state monitoring
 - **Prometheus Metrics**: Comprehensive metrics for monitoring and alerting
@@ -219,6 +207,7 @@ For detailed information on production security implementations, see our [Produc
 - **Secret Management**: Advanced patterns with External Secrets Operator
 - **Rate Limiting & DDoS Protection**: Production-grade ingress configurations
 - **Audit Logging**: Comprehensive audit trails for compliance
+- **Container Security**: Distroless images, vulnerability scanning, runtime policies
 
 ## 🚀 Scalability
 
@@ -319,40 +308,13 @@ This implementation goes far beyond the basic requirements to demonstrate produc
 - ✅ **Deployment Automation**: One-command production deployments
 - ✅ **Rollback Capability**: Easy reversion to previous versions
 
-## 🎓 What This Demonstrates
+## 🎓 Technical Overview
 
-This project showcases skills across the full SRE spectrum:
-
-### Software Engineering
-- Clean architecture with separation of concerns
-- Comprehensive error handling and logging
-- Unit and integration testing
-- Dependency injection and interfaces
-
-### Operations
-- Kubernetes-native deployment patterns
-- Infrastructure as Code (Kustomize)
-- Monitoring and alerting setup
-- Performance optimization and capacity planning
-- **GitOps and Progressive Delivery**: Automated deployments with rollback
-- **Multi-Environment Strategy**: Dev, staging, production lifecycle management
-- **Security-First Operations**: Secrets management, network policies, audit logging
-
-### Reliability Engineering
-- Fault tolerance design patterns
-- Observability implementation
-- Incident response preparation
-- Scalability planning and testing
-
-### Performance Engineering
-- Load testing and capacity planning
-- Resource optimization and efficiency
-- Cache strategy and implementation
-- Latency optimization techniques
+This project demonstrates a production-ready microservice with comprehensive monitoring, resilience patterns, and operational best practices.
 
 ## 🤝 Contributing
 
-This project represents a coding challenge submission for a Staff SRE position. The codebase demonstrates production-ready patterns and serves as a template for microservice development.
+Contributions are welcome! Please feel free to submit issues and pull requests.
 
 ## 📄 License
 
