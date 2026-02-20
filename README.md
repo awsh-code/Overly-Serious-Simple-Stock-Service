@@ -1,23 +1,21 @@
 # Overly-Serious-Simple-Stock-Service
 
-A production-grade stock ticker microservice that provides stock price data with built-in monitoring, caching, and fault tolerance.
+A Go-based stock price service with monitoring, caching, and fault tolerance capabilities.
 
-## 🌐 Service Overview
+## Overview
 
-A production-grade stock ticker microservice that provides stock price data with built-in monitoring, caching, and fault tolerance.
+This service provides stock price data through a REST API with built-in observability features and resilience patterns.
 
-### 📊 Monitoring & Golden Signals
+### Monitoring
 
-This service implements the **Four Golden Signals** for comprehensive observability:
+The service tracks the Four Golden Signals for observability:
 
-- **Latency**: Request duration tracking (including errors)
-- **Traffic**: Requests per second monitoring  
-- **Errors**: Failed request rate tracking (4xx, 5xx, timeouts)
-- **Saturation**: Resource utilization monitoring (CPU, memory, disk, network)
+- **Latency**: Request duration tracking
+- **Traffic**: Request volume monitoring  
+- **Errors**: Failed request rate tracking
+- **Saturation**: Resource utilization metrics
 
-These metrics provide complete system health visibility for capacity planning, incident response, performance optimization, and SLA compliance.
-
-## 🚀 Quick Start
+## Quick Start
 
 ### Option 1: Helm Chart (Production Recommended)
 
@@ -58,32 +56,32 @@ make all VERSION=v1.0.0
 ```
 
 ### CI/CD Pipeline
-Our comprehensive GitHub Actions pipeline includes:
-- **Automated Testing**: Unit, integration, and security tests
-- **Security Scanning**: Trivy vulnerability scanning with SARIF reporting
-- **Helm Chart Validation**: Linting, templating, and packaging
-- **Multi-stage Deployment**: Automated staging and production deployments
-- **Monitoring Integration**: Automatic dashboard and alert provisioning
+The GitHub Actions pipeline includes:
+- Automated testing (unit, integration, security)
+- Security scanning with Trivy
+- Helm chart validation and packaging
+- Multi-stage deployment automation
+- Monitoring integration
 
-See `.github/workflows/` for complete pipeline configuration.
+See `.github/workflows/` for complete configuration.
 
-## 📚 API Documentation
+## API Documentation
 
-Access beautiful, interactive API documentation at: `http://localhost:8080/docs`
+Access interactive API documentation at: `http://localhost:8080/docs`
 
 ### Available Endpoints
-- `GET /` - Get stock data for default symbol (MSFT)
+- `GET /` - Get stock data for default symbol
 - `GET /{symbol}` - Get stock data for specific symbol
-- `GET /{symbol}/{days}` - Get stock data for specific symbol and number of days
-- `GET /health` - Health check (liveness probe)
-- `GET /ready` - Readiness check (readiness probe)
-- `GET /metrics` - Prometheus metrics endpoint
-- `GET /docs` - Scalar interactive documentation
+- `GET /{symbol}/{days}` - Get stock data with custom day range
+- `GET /health` - Health check
+- `GET /ready` - Readiness check
+- `GET /metrics` - Prometheus metrics
+- `GET /docs` - Interactive documentation
 - `GET /circuit-breaker` - Circuit breaker status
 
-## 🏗️ Architecture
+## Architecture
 
-This service follows a standard microservice architecture, with a load balancer, the service itself, and an external API dependency. It also includes built-in monitoring with Prometheus and Grafana.
+This service follows a standard microservice architecture with load balancing, service logic, and external API integration. Includes monitoring with Prometheus and Grafana.
 
 ### System Architecture
 ```
@@ -100,9 +98,9 @@ This service follows a standard microservice architecture, with a load balancer,
 └─────────────────┘    └──────────────────┘
 ```
 
-## 📊 Features
+## Features
 
-- **Stock Price API**: Get up to NDAYS of closing prices for any stock symbol
+- **Stock Price API**: Get closing prices for any stock symbol
 - **Average Calculation**: Automatically calculates average closing price
 - **Environment Configuration**: SYMBOL and NDAYS configurable via environment variables
 - **API Key Management**: Secure API key handling via Kubernetes secrets
@@ -113,9 +111,9 @@ This service follows a standard microservice architecture, with a load balancer,
 - **Health Checks**: Liveness and readiness probes for Kubernetes
 - **Stress Testing**: Included scripts for load testing and validation
 - **Horizontal Pod Autoscaler**: Automatic scaling based on CPU/memory usage
-- **Scalar Documentation**: Beautiful, interactive API documentation
+- **Scalar Documentation**: Interactive API documentation
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 | Variable | Description | Default |
@@ -145,7 +143,7 @@ make test-integration
 make stress-test CONCURRENT=100 DURATION=60s
 ```
 
-## 📈 Monitoring & Observability
+## Monitoring & Observability
 
 ### Metrics Available
 - `stock_api_requests_total`: Total API requests
@@ -157,12 +155,12 @@ make stress-test CONCURRENT=100 DURATION=60s
 - `stock_api_external_call_duration_seconds`: External API latency
 
 ### Alerting Strategy
-Our metrics are structured for easy Prometheus alerting rules:
-- **High Latency**: 95th percentile latency above 2 seconds
-- **Circuit Breaker Open**: Circuit breaker state == 1 (open)
-- **Low Cache Hit Rate**: Cache hit rate below 50%
+Metrics are structured for Prometheus alerting rules:
+- High Latency: 95th percentile latency above 2 seconds
+- Circuit Breaker Open: Circuit breaker state == 1 (open)
+- Low Cache Hit Rate: Cache hit rate below 50%
 
-## 🔒 Security
+## Security
 
 - API keys stored in Kubernetes secrets
 - Non-root container execution
@@ -170,32 +168,32 @@ Our metrics are structured for easy Prometheus alerting rules:
 - Network policies ready for implementation
 - No sensitive data in logs or metrics
 
-### 🔐 Production Security Patterns
-For detailed information on production security implementations, see our [Production Security Documentation](docs/production-security.md) which covers:
-- **Monitoring Access Controls**: How to secure Grafana/Prometheus in production
-- **Network Security**: Network policies and service mesh integration
-- **Secret Management**: Advanced patterns with External Secrets Operator
-- **Rate Limiting & DDoS Protection**: Production-grade ingress configurations
-- **Audit Logging**: Comprehensive audit trails for compliance
-- **Container Security**: Distroless images, vulnerability scanning, runtime policies
+### Production Security Patterns
+See [Production Security Documentation](docs/production-security.md) for:
+- Monitoring Access Controls
+- Network Security
+- Secret Management
+- Rate Limiting & DDoS Protection
+- Audit Logging
+- Container Security
 
-## 🚀 Scalability
+## Scalability
 
 ### Horizontal Pod Autoscaler
-- **Min Replicas**: 2
-- **Max Replicas**: 10
-- **CPU Target**: 70% utilization
-- **Memory Target**: 80% utilization
-- **Scale-up Rate**: 50% per 30 seconds
-- **Scale-down Rate**: 10% per 60 seconds
+- Min Replicas: 2
+- Max Replicas: 10
+- CPU Target: 70% utilization
+- Memory Target: 80% utilization
+- Scale-up Rate: 50% per 30 seconds
+- Scale-down Rate: 10% per 60 seconds
 
 ### Resource Requirements
-- **CPU Request**: 100m
-- **CPU Limit**: 500m
-- **Memory Request**: 128Mi
-- **Memory Limit**: 512Mi
+- CPU Request: 100m
+- CPU Limit: 500m
+- Memory Request: 128Mi
+- Memory Limit: 512Mi
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 .
@@ -221,71 +219,69 @@ For detailed information on production security implementations, see our [Produc
 └── README.md                   # This file
 ```
 
-## 📖 Architecture Documentation
+## Architecture Documentation
 
 For detailed technical documentation on each component:
 
-- **[Circuit Breaker Architecture](docs/architecture-circuit-breaker.md)**: Deep dive into fault tolerance patterns, state machine implementation, and resilience engineering
-- **[Caching Strategy](docs/architecture-caching.md)**: Performance optimization, cache invalidation patterns, and memory management
-- **[Metrics & Observability](docs/architecture-metrics-observability.md)**: Prometheus metrics design, Grafana dashboard strategy, and SRE alerting patterns
-- **[API Design & Error Handling](docs/architecture-api-design.md)**: RESTful API patterns, validation strategies, and error response architecture
-- **[Production Security](docs/production-security.md)**: Production-grade security patterns, network policies, and access controls
-- **[Kustomize Deployment](docs/kustomize-deployment.md)**: GitOps deployment strategy, environment management, and infrastructure automation
-- **[Deployment Guide](docs/deployment.md)**: Comprehensive deployment guide with Helm charts and Kubernetes manifests
-- **[Operational Runbook](docs/operational-runbook.md)**: Production operations, incident response, and maintenance procedures
+- [Circuit Breaker Architecture](docs/architecture-circuit-breaker.md): Fault tolerance patterns and resilience engineering
+- [Caching Strategy](docs/architecture-caching.md): Performance optimization and cache management
+- [Metrics & Observability](docs/architecture-metrics-observability.md): Prometheus metrics and Grafana dashboards
+- [API Design & Error Handling](docs/architecture-api-design.md): RESTful API patterns and error handling
+- [Production Security](docs/production-security.md): Security patterns and access controls
+- [Kustomize Deployment](docs/kustomize-deployment.md): GitOps deployment and environment management
+- [Deployment Guide](docs/deployment.md): Deployment guide with Helm charts and Kubernetes manifests
+- [Operational Runbook](docs/operational-runbook.md): Operations, incident response, and maintenance procedures
 
-## 🎯 Beyond Requirements
-
-This implementation goes far beyond the basic requirements to demonstrate production-ready patterns:
+## Additional Features
 
 ### Resilience Engineering
-- ✅ **Circuit Breaker**: Prevents cascading failures with state monitoring
-- ✅ **Caching Layer**: In-memory caching with cache hit/miss metrics
-- ✅ **Health Checks**: Kubernetes-native liveness/readiness probes
-- ✅ **Graceful Degradation**: Service continues with cached data if external API fails
-- ✅ **Timeout Protection**: All external calls have configurable timeouts
-- ✅ **Retry Logic**: Configurable retry attempts for transient failures
+- Circuit Breaker: Prevents cascading failures with state monitoring
+- Caching Layer: In-memory caching with cache hit/miss metrics
+- Health Checks: Kubernetes-native liveness/readiness probes
+- Graceful Degradation: Service continues with cached data if external API fails
+- Timeout Protection: All external calls have configurable timeouts
+- Retry Logic: Configurable retry attempts for transient failures
 
-### Observability Excellence
-- ✅ **Metrics**: Comprehensive Prometheus metrics for all operations
-- ✅ **Dashboards**: Pre-built Grafana dashboards for visualization
-- ✅ **Alerting**: Metrics structured for easy alerting rules
-- ✅ **Distributed Tracing**: Ready for OpenTelemetry integration
-- ✅ **Structured Logging**: Zap-based logging with correlation IDs
+### Observability
+- Metrics: Comprehensive Prometheus metrics for all operations
+- Dashboards: Pre-built Grafana dashboards for visualization
+- Alerting: Metrics structured for easy alerting rules
+- Distributed Tracing: Ready for OpenTelemetry integration
+- Structured Logging: Zap-based logging with correlation IDs
 
-### Operational Excellence
-- ✅ **One-Command Deploy**: Complete automation with Make
-- ✅ **Rolling Updates**: Zero-downtime deployments
-- ✅ **Rollback Capability**: Easy reversion to previous versions
-- ✅ **Environment Management**: Separate configs for dev/staging/prod
-- ✅ **Documentation**: Comprehensive setup and operational guides
-- ✅ **Scalar Integration**: Beautiful, interactive API documentation
-- ✅ **Kustomize Patterns**: Production-ready GitOps deployment strategy
-- ✅ **Security Documentation**: Production security patterns and access controls
+### Operational Features
+- One-Command Deploy: Complete automation with Make
+- Rolling Updates: Zero-downtime deployments
+- Rollback Capability: Easy reversion to previous versions
+- Environment Management: Separate configs for dev/staging/prod
+- Documentation: Comprehensive setup and operational guides
+- Scalar Integration: Interactive API documentation
+- Kustomize Patterns: GitOps deployment strategy
+- Security Documentation: Production security patterns and access controls
 
 ### Performance Engineering
-- ✅ **Load Testing**: Included stress testing scripts
-- ✅ **Horizontal Scaling**: HPA with CPU/memory-based scaling
-- ✅ **Resource Optimization**: Multi-stage Docker builds
-- ✅ **Cache Efficiency**: 95%+ hit rates under normal load
-- ✅ **Circuit Breaker**: Sub-second failure detection and recovery
+- Load Testing: Included stress testing scripts
+- Horizontal Scaling: HPA with CPU/memory-based scaling
+- Resource Optimization: Multi-stage Docker builds
+- Cache Efficiency: 95%+ hit rates under normal load
+- Circuit Breaker: Sub-second failure detection and recovery
 
 ### Production Deployment
-- ✅ **Helm Charts**: Production-ready Helm chart with comprehensive configuration
-- ✅ **GitOps Integration**: Automated CI/CD with GitHub Actions
-- ✅ **Multi-Environment Support**: Dev, staging, production lifecycle management
-- ✅ **Package Management**: Helm chart packaging and artifact management
-- ✅ **Deployment Automation**: One-command production deployments
-- ✅ **Rollback Capability**: Easy reversion to previous versions
+- Helm Charts: Helm chart with comprehensive configuration
+- GitOps Integration: Automated CI/CD with GitHub Actions
+- Multi-Environment Support: Dev, staging, production lifecycle management
+- Package Management: Helm chart packaging and artifact management
+- Deployment Automation: One-command production deployments
+- Rollback Capability: Easy reversion to previous versions
 
-## 🎓 Technical Overview
+## Technical Overview
 
 This project demonstrates a production-ready microservice with comprehensive monitoring, resilience patterns, and operational best practices.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit issues and pull requests.
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
