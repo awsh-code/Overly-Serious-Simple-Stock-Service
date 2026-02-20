@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  title: Ping Service API
+  version: 1.0.0
+  description: A simple API to get stock data.
+paths:
+  /:
+    get:
+      summary: Get stock data
+      responses:
+        '200':
+          description: A map of stock symbols to their prices.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: number
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+  /circuit-breaker:
+    get:
+      summary: Get circuit breaker status
+      responses:
+        '200':
+          description: The current status of the circuit breaker.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: string
+                    example: closed
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      responses:
+        '200':
+          description: Prometheus metrics.
+          content:
+            text/plain:
+              schema:
+                type: string

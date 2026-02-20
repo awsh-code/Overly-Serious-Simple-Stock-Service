@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stock-service-config
+  labels:
+    app: stock-service
+data:
+  SYMBOL: "MSFT"
+  NDAYS: "7"
+  PORT: "8080"
+  CACHE_TTL: "300"
+  CIRCUIT_BREAKER_TIMEOUT: "30s"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: stock-service-secret
+  labels:
+    app: stock-service
+type: Opaque
+data:
+  # Base64 encoded API key - replace with actual key
+  # echo -n "your-alpha-vantage-api-key" | base64
+  apikey: eW91ci1hbHBoYS12YW50YWdlLWFwaS1rZXk=
