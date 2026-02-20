@@ -14,6 +14,10 @@ A production-grade stock ticker microservice that demonstrates SRE excellence, r
 | **Health Check**         | [http://ping-service.46.225.33.158.nip.io/health](http://ping-service.46.225.33.158.nip.io/health) | Service liveness probe |
 | **Circuit Breaker**      | [http://ping-service.46.225.33.158.nip.io/circuit-breaker](http://ping-service.46.225.33.158.nip.io/circuit-breaker) | Circuit Breaker Status |
 | **Grafana Dashboard**    | [http://grafana.46.225.33.158.nip.io](http://grafana.46.225.33.158.nip.io) | Live monitoring dashboard |
+| **Golden Signals**       | [http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals](http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals) | Golden Signals Dashboard |
+| **Ping Service Metrics** | [http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard](http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard) | Detailed Service Metrics |
+
+**🔐 Demo Credentials** (Grafana): `demo` / `mJolOtJL8o5Umhu5tmqIya`
 
 **📊 Try our stress testing:**
 ```bash
