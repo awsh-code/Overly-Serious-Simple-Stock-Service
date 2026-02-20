@@ -64,7 +64,7 @@ Standard HTTP metrics with detailed routing information:
 // Global HTTP metrics (from middleware)
 requestDuration := prometheus.NewHistogramVec(
     prometheus.HistogramOpts{
-        Name: "ping_service_request_duration_seconds",
+        Name: "stock_service_request_duration_seconds",
         Help: "Duration of HTTP requests in seconds",
     },
     []string{"method", "endpoint", "status"},
@@ -72,7 +72,7 @@ requestDuration := prometheus.NewHistogramVec(
 
 requestCount := prometheus.NewCounterVec(
     prometheus.CounterOpts{
-        Name: "ping_service_requests_total",
+        Name: "stock_service_requests_total",
         Help: "Total number of HTTP requests",
     },
     []string{"method", "endpoint", "status"},
@@ -293,15 +293,15 @@ The `/metrics` endpoint is exposed for Prometheus scraping, but production deplo
 
 Our primary dashboard focuses on the Four Golden Signals:
 
-1. **Latency**: `ping_service_request_duration_seconds`
+1. **Latency**: `stock_service_request_duration_seconds`
    - P50, P95, P99 percentiles by endpoint
    - Separate views for cache hits vs. external API calls
 
-2. **Traffic**: `ping_service_requests_total`
+2. **Traffic**: `stock_service_requests_total`
    - Request rate by endpoint and status code
    - Cache hit ratio calculation: `cache_hits / (cache_hits + cache_misses)`
 
-3. **Errors**: HTTP 4xx/5xx rates from `ping_service_requests_total`
+3. **Errors**: HTTP 4xx/5xx rates from `stock_service_requests_total`
    - External API error rates from circuit breaker metrics
    - Cache error tracking
 
@@ -330,7 +330,7 @@ groups:
   - name: stock-service-latency
     rules:
       - alert: HighLatency
-        expr: histogram_quantile(0.95, ping_service_request_duration_seconds_bucket) > 2
+        expr: histogram_quantile(0.95, stock_service_request_duration_seconds_bucket) > 2
         for: 5m
         annotations:
           summary: "95th percentile latency above 2 seconds"
@@ -429,7 +429,7 @@ func TestMetricsEndpoint(t *testing.T) {
     metrics := string(body)
     
     // Verify expected metrics are present
-    assert.Contains(t, metrics, "ping_service_requests_total")
+    assert.Contains(t, metrics, "stock_service_requests_total")
     assert.Contains(t, metrics, "stock_api_cache_hits_total")
 }
 ```

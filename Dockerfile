@@ -15,7 +15,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ping-service ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o stock-service ./cmd/main.go
 
 # Final stage
 FROM alpine:latest
@@ -30,7 +30,7 @@ RUN addgroup -g 1001 -S appuser && \
 WORKDIR /app
 
 # Copy binary from builder
-COPY --from=builder /app/ping-service .
+COPY --from=builder /app/stock-service .
 COPY docs ./docs
 
 # Change ownership
@@ -47,4 +47,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 
 # Run the application
-CMD ["./ping-service"]
+CMD ["./stock-service"]

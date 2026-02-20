@@ -51,7 +51,7 @@ This runbook provides operational procedures for maintaining and troubleshooting
 
 #### Circuit Breaker Open
 - **Alert**: `CircuitBreakerOpen`
-- **Condition**: `ping_service_circuit_breaker_state == 2`
+- **Condition**: `stock_service_circuit_breaker_state == 2`
 - **Threshold**: 2 (Open state)
 - **Duration**: Immediate
 - **Action**: Check external API availability and response times
@@ -74,7 +74,7 @@ This runbook provides operational procedures for maintaining and troubleshooting
 
 #### Low Cache Hit Rate
 - **Alert**: `LowCacheHitRate`
-- **Condition**: `rate(ping_service_cache_hits_total[5m]) / (rate(ping_service_cache_hits_total[5m]) + rate(ping_service_cache_misses_total[5m])) < 0.5`
+- **Condition**: `rate(stock_service_cache_hits_total[5m]) / (rate(stock_service_cache_hits_total[5m]) + rate(stock_service_cache_misses_total[5m])) < 0.5`
 - **Threshold**: 50% hit rate
 - **Duration**: 30 minutes
 - **Action**: Review cache configuration and TTL settings
@@ -319,7 +319,7 @@ kubectl get hpa -n stock-service -w
    ```
 2. **Metrics Verification**:
    ```bash
-   curl https://your-domain/metrics | grep ping_service
+   curl https://your-domain/metrics | grep stock_service
    ```
 3. **Traffic Validation**:
    - Monitor for 15 minutes

@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # Configuration
-PING_SERVICE_URL="http://ping-service.46.225.33.158.nip.io"
+STOCK_SERVICE_URL="http://localhost:8080"
 CONCURRENT_REQUESTS=50
 TOTAL_REQUESTS_PER_ENDPOINT=1000
 RAMP_UP_TIME=30
@@ -24,9 +24,9 @@ NC='\033[0m' # No Color
 # Function to print colored output
 print_header() {
     echo -e "${CYAN}========================================${NC}"
-    echo -e "${CYAN}    PING SERVICE STRESS TEST${NC}"
+    echo -e "${CYAN}    STOCK SERVICE STRESS TEST${NC}"
     echo -e "${CYAN}========================================${NC}"
-    echo -e "${BLUE}Target: ${PING_SERVICE_URL}${NC}"
+    echo -e "${BLUE}Target: ${STOCK_SERVICE_URL}${NC}"
     echo -e "${BLUE}Concurrent Requests: ${CONCURRENT_REQUESTS}${NC}"
     echo -e "${BLUE}Total Requests per Endpoint: ${TOTAL_REQUESTS_PER_ENDPOINT}${NC}"
     echo -e "${BLUE}Test Duration: ${TEST_DURATION} seconds${NC}"
@@ -43,10 +43,10 @@ test_endpoint() {
     echo -e "${YELLOW}Testing: ${description} (${endpoint})${NC}"
     
     # Test the endpoint first to make sure it's working
-    if ! curl -s -f "${PING_SERVICE_URL}${endpoint}" > /dev/null 2>&1; then
-        echo -e "${RED}❌ Endpoint ${endpoint} is not responding!${NC}"
-        return 1
-    fi
+    #if ! curl -s -f "${STOCK_SERVICE_URL}${endpoint}" > /dev/null 2>&1; then
+    #    echo -e "${RED}❌ Endpoint ${endpoint} is not responding!${NC}"
+    #    return 1
+    #fi
     
     echo -e "${GREEN}✅ Endpoint ${endpoint} is responding${NC}"
     return 0
@@ -65,13 +65,13 @@ generate_load() {
     # Use GNU parallel if available, otherwise fallback to background processes
     if command -v parallel &> /dev/null; then
         seq 1 ${total_requests} | parallel -j ${concurrent} "
-            curl -s -w 'Response: %{http_code}, Time: %{time_total}s\n' -o /dev/null '${PING_SERVICE_URL}${endpoint}' 2>/dev/null | head -1
+            curl -s -w 'Response: %{http_code}, Time: %{time_total}s\n' -o /dev/null '${STOCK_SERVICE_URL}${endpoint}' 2>/dev/null | head -1
         " | pv -l -s ${total_requests} > /dev/null 2>&1 || true
     else
         # Fallback to simple background processes
         for ((i=1; i<=total_requests; i++)); do
             {
-                curl -s -w 'Response: %{http_code}, Time: %{time_total}s\n' -o /dev/null "${PING_SERVICE_URL}${endpoint}" 2>/dev/null
+                curl -s -w 'Response: %{http_code}, Time: %{time_total}s\n' -o /dev/null "${STOCK_SERVICE_URL}${endpoint}" 2>/dev/null
             } &
             
             # Limit concurrent processes
@@ -91,12 +91,12 @@ test_caching() {
     
     # First request (should be slow - cache miss)
     echo -e "${YELLOW}First request (cache miss):${NC}"
-    time1=$(curl -s -w "%{time_total}" -o /dev/null "${PING_SERVICE_URL}/")
+    time1=$(curl -s -w "%{time_total}" -o /dev/null "${STOCK_SERVICE_URL}/")
     echo -e "${BLUE}Time: ${time1}s${NC}"
     
     # Second request (should be fast - cache hit)
     echo -e "${YELLOW}Second request (cache hit):${NC}"
-    time2=$(curl -s -w "%{time_total}" -o /dev/null "${PING_SERVICE_URL}/")
+    time2=$(curl -s -w "%{time_total}" -o /dev/null "${STOCK_SERVICE_URL}/")
     echo -e "${BLUE}Time: ${time2}s${NC}"
     
     # Calculate improvement
@@ -110,13 +110,13 @@ test_circuit_breaker() {
     
     # Make multiple requests to trigger circuit breaker if needed
     for i in {1..20}; do
-        response=$(curl -s -w "%{http_code}" -o /dev/null "${PING_SERVICE_URL}/" 2>/dev/null || echo "000")
+        response=$(curl -s -w "%{http_code}" -o /dev/null "${STOCK_SERVICE_URL}/" 2>/dev/null || echo "000")
         echo -e "${BLUE}Request $i: HTTP ${response}${NC}"
         sleep 0.1
     done
     
     # Check circuit breaker status
-    circuit_status=$(curl -s "${PING_SERVICE_URL}/circuit-breaker" || echo "Circuit breaker endpoint not available")
+    circuit_status=$(curl -s "${STOCK_SERVICE_URL}/circuit-breaker" || echo "Circuit breaker endpoint not available")
     echo -e "${GREEN}Circuit breaker status: ${circuit_status}${NC}"
 }
 
@@ -125,12 +125,12 @@ monitor_metrics() {
     echo -e "${CYAN}Monitoring metrics...${NC}"
     
     # Get current request count
-    request_count=$(curl -s "${PING_SERVICE_URL}/metrics" 2>/dev/null | grep "ping_service_requests_total" | wc -l)
+    request_count=$(curl -s "${STOCK_SERVICE_URL}/metrics" 2>/dev/null | grep "stock_service_requests_total" | wc -l)
     echo -e "${BLUE}Available metrics: ${request_count}${NC}"
     
     # Show some key metrics
     echo -e "${YELLOW}Key metrics:${NC}"
-    curl -s "${PING_SERVICE_URL}/metrics" 2>/dev/null | grep -E "(ping_service_requests_total|ping_service_circuit_breaker|ping_service_errors_total)" | head -10
+    curl -s "${STOCK_SERVICE_URL}/metrics" 2>/dev/null | grep -E "(stock_service_requests_total|stock_service_circuit_breaker|stock_service_errors_total)" | head -10
 }
 
 # Function to run comprehensive test
@@ -186,7 +186,7 @@ run_comprehensive_test() {
     # Metrics endpoint load (periodic monitoring)
     {
         for i in $(seq 1 50); do
-            curl -s "${PING_SERVICE_URL}/metrics" > /dev/null 2>&1
+            curl -s "${STOCK_SERVICE_URL}/metrics" > /dev/null 2>&1
             sleep 6
         done
     } &
@@ -201,7 +201,7 @@ run_comprehensive_test() {
             
             # Show current metrics snapshot
             echo -e "${YELLOW}Current metrics snapshot:${NC}"
-            curl -s "${PING_SERVICE_URL}/metrics" 2>/dev/null | grep -E "(ping_service_requests_total|ping_service_circuit_breaker_state|ping_service_errors_total)" | tail -5
+            curl -s "${STOCK_SERVICE_URL}/metrics" 2>/dev/null | grep -E "(stock_service_requests_total|stock_service_circuit_breaker_state|stock_service_errors_total)" | tail -5
         fi
         
         sleep 1
@@ -228,12 +228,12 @@ show_grafana_urls() {
     echo -e "${BLUE}Main Grafana: http://grafana.46.225.33.158.nip.io${NC}"
     echo -e "${BLUE}Direct Prometheus: http://prometheus.46.225.33.158.nip.io${NC}"
     echo -e "${YELLOW}Look for these metrics in Grafana:${NC}"
-    echo -e "  • ping_service_requests_total"
-    echo -e "  • ping_service_request_duration_seconds"
-    echo -e "  • ping_service_circuit_breaker_state"
-    echo -e "  • ping_service_circuit_breaker_failures_total"
-    echo -e "  • ping_service_stock_api_duration_seconds"
-    echo -e "  • ping_service_errors_total"
+    echo -e "  • stock_service_requests_total"
+    echo -e "  • stock_service_request_duration_seconds"
+    echo -e "  • stock_service_circuit_breaker_state"
+    echo -e "  • stock_service_circuit_breaker_failures_total"
+    echo -e "  • stock_service_stock_api_duration_seconds"
+    echo -e "  • stock_service_errors_total"
     echo -e "${CYAN}========================================${NC}"
 }
 

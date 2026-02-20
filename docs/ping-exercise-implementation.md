@@ -27,21 +27,21 @@ This document provides a comprehensive overview of the implementation of the sto
 ### Build & Run Instructions
 ```bash
 # Build locally
-go build -o bin/ping-service cmd/main.go
+go build -o bin/stock-service cmd/main.go
 
 # Build Docker image
-docker buildx build --platform linux/amd64,linux/arm64 -t codyadkinsdev/ping-service:resilience-complete --push .
+docker buildx build --platform linux/amd64,linux/arm64 -t codyadkinsdev/stock-service:resilience-complete --push .
 
 # Run locally with environment variables
 export SYMBOL=MSFT NDAYS=7 APIKEY=C227WD9W3LUVKVV9 PORT=8080
-./bin/ping-service
+./bin/stock-service
 ```
 
 ## Part 2: Kubernetes Deployment ✅ COMPLETED
 
 ### Architecture
 - **Namespace**: `dev` (development environment)
-- **Base Manifests**: Located in `/applications/base/ping-service/`
+- **Base Manifests**: Located in `/applications/base/stock-service/`
 - **Environment Overlays**: Located in `/applications/overlays/dev/`
 - **Kustomize**: Used for configuration management
 
@@ -59,21 +59,21 @@ export SYMBOL=MSFT NDAYS=7 APIKEY=C227WD9W3LUVKVV9 PORT=8080
 kubectl apply -k applications/overlays/dev/
 
 # Check deployment status
-kubectl get pods -n dev -l app=ping-service
-kubectl get svc -n dev ping-service
-kubectl get ingress -n dev ping-service
+kubectl get pods -n dev -l app=stock-service
+kubectl get svc -n dev stock-service
+kubectl get ingress -n dev stock-service
 ```
 
 ### Access Points
-- **Application**: http://ping-service.46.225.33.158.nip.io/
-- **Health Check**: http://ping-service.46.225.33.158.nip.io/health
-- **Metrics**: http://ping-service.46.225.33.158.nip.io/metrics
-- **Circuit Breaker Status**: http://ping-service.46.225.33.158.nip.io/circuit-breaker
+- **Application**: http://stock-service.46.225.33.158.nip.io/
+- **Health Check**: http://stock-service.46.225.33.158.nip.io/health
+- **Metrics**: http://stock-service.46.225.33.158.nip.io/metrics
+- **Circuit Breaker Status**: http://stock-service.46.225.33.158.nip.io/circuit-breaker
 
 ## Part 3: Resilience Patterns ✅ IMPLEMENTED
 
 ### 1. Horizontal Pod Autoscaling (HPA)
-**File**: `/applications/base/ping-service/hpa.yaml`
+**File**: `/applications/base/stock-service/hpa.yaml`
 
 **Configuration**:
 - Min replicas: 2
@@ -86,11 +86,11 @@ kubectl get ingress -n dev ping-service
 **Metrics**:
 ```bash
 # Check HPA status
-kubectl get hpa -n dev ping-service-hpa
+kubectl get hpa -n dev stock-service-hpa
 ```
 
 ### 2. Circuit Breaker Pattern
-**File**: `/applications/ping-service/internal/circuitbreaker/circuitbreaker.go`
+**File**: `/applications/stock-service/internal/circuitbreaker/circuitbreaker.go`
 
 **Implementation**:
 - 3 states: Closed, Open, Half-Open
@@ -100,9 +100,9 @@ kubectl get hpa -n dev ping-service-hpa
 - Thread-safe with mutex protection
 
 **Metrics Exposed**:
-- `ping_service_circuit_breaker_state` (0=closed, 1=open, 2=half-open)
-- `ping_service_circuit_breaker_failures_total`
-- `ping_service_circuit_breaker_successes_total`
+- `stock_service_circuit_breaker_state` (0=closed, 1=open, 2=half-open)
+- `stock_service_circuit_breaker_failures_total`
+- `stock_service_circuit_breaker_successes_total`
 
 **Integration**:
 - Wraps all external API calls
@@ -110,7 +110,7 @@ kubectl get hpa -n dev ping-service-hpa
 - Provides fallback behavior
 
 ### 3. Caching Strategy
-**File**: `/applications/ping-service/internal/cache/cache.go`
+**File**: `/applications/stock-service/internal/cache/cache.go`
 
 **Features**:
 - In-memory cache with TTL (5 minutes for stock data)
@@ -131,13 +131,13 @@ kubectl get hpa -n dev ping-service-hpa
 ```
 
 ### 4. Golden Signal Metrics
-**File**: `/applications/ping-service/internal/handlers/handlers.go`
+**File**: `/applications/stock-service/internal/handlers/handlers.go`
 
 **Metrics Implemented**:
-- **Latency**: `ping_service_request_duration_seconds`
-- **Traffic**: `ping_service_requests_total`
-- **Errors**: `ping_service_errors_total` (with type and endpoint labels)
-- **Saturation**: `ping_service_saturation_percentage`
+- **Latency**: `stock_service_request_duration_seconds`
+- **Traffic**: `stock_service_requests_total`
+- **Errors**: `stock_service_errors_total` (with type and endpoint labels)
+- **Saturation**: `stock_service_saturation_percentage`
 
 **Error Tracking**:
 - API errors (external service failures)
@@ -172,9 +172,9 @@ resources:
 
 ### Grafana Dashboards
 **Available Dashboards**:
-1. **Ping Service Overview**: Basic metrics and health
-2. **Ping Service Golden Signals**: RED metrics
-3. **Ping Service Resilience**: Circuit breaker and cache metrics
+1. **Stock Service Overview**: Basic metrics and health
+2. **Stock Service Golden Signals**: RED metrics
+3. **Stock Service Resilience**: Circuit breaker and cache metrics
 
 **Access**: http://localhost:3000 (admin/2hKJ4YDzGPNfIbDYJaf1mCeHvJvWL5d5MMy9TpF6%)
 
@@ -218,30 +218,30 @@ resources:
 ### Health Checks
 ```bash
 # Check service health
-curl http://ping-service.46.225.33.158.nip.io/health
+curl http://stock-service.46.225.33.158.nip.io/health
 
 # Check metrics
-curl http://ping-service.46.225.33.158.nip.io/metrics | grep ping_service
+curl http://stock-service.46.225.33.158.nip.io/metrics | grep stock_service
 
 # Check circuit breaker
-curl http://ping-service.46.225.33.158.nip.io/circuit-breaker
+curl http://stock-service.46.225.33.158.nip.io/circuit-breaker
 ```
 
 ### Resource Status
 ```bash
 # Check pods
-kubectl get pods -n dev -l app=ping-service
+kubectl get pods -n dev -l app=stock-service
 
 # Check HPA
-kubectl get hpa -n dev ping-service-hpa
+kubectl get hpa -n dev stock-service-hpa
 
 # Check ingress
-kubectl get ingress -n dev ping-service
+kubectl get ingress -n dev stock-service
 ```
 
 ## Conclusion
 
-The ping-service has been successfully implemented with enterprise-grade resilience patterns including horizontal pod autoscaling, circuit breaker protection, intelligent caching, and comprehensive monitoring. The service is production-ready and can handle varying loads while maintaining high availability and performance.
+The stock-service has been successfully implemented with enterprise-grade resilience patterns including horizontal pod autoscaling, circuit breaker protection, intelligent caching, and comprehensive monitoring. The service is production-ready and can handle varying loads while maintaining high availability and performance.
 
 **Key Achievements**:
 - ✅ Stock ticker service with Alpha Vantage integration

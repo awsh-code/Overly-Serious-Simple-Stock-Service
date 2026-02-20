@@ -49,7 +49,7 @@ Returns service health status for Kubernetes probes.
 
 **Response:**
 ```json
-{"service": "ping-service", "status": "healthy", "timestamp": 1771572918}
+{"service": "stock-service", "status": "healthy", "timestamp": 1771572918}
 ```
 
 ### 3. Circuit Breaker Status (`GET /circuit-breaker`)
@@ -64,11 +64,11 @@ Returns circuit breaker metrics and status.
 Prometheus metrics endpoint for monitoring.
 
 **Key Metrics:**
-- `ping_service_request_duration_seconds` - Request latency
-- `ping_service_requests_total` - Total request count
-- `ping_service_circuit_breaker_state` - Circuit breaker state
-- `ping_service_errors_total` - Error count
-- `ping_service_stock_api_duration_seconds` - External API call duration
+- `stock_service_request_duration_seconds` - Request latency
+- `stock_service_requests_total` - Total request count
+- `stock_service_circuit_breaker_state` - Circuit breaker state
+- `stock_service_errors_total` - Error count
+- `stock_service_stock_api_duration_seconds` - External API call duration
 
 ### 5. Documentation (`GET /docs`)
 Interactive API documentation using Scalar API Reference.
@@ -80,7 +80,7 @@ OpenAPI 3.0 specification for the service.
 
 ### Component Structure
 ```
-ping-service/
+stock-service/
 ├── cmd/main.go                 # Application entry point
 ├── internal/
 │   ├── cache/                  # In-memory caching implementation
@@ -116,20 +116,20 @@ ping-service/
 ### Local Development
 ```bash
 # Build the service
-cd applications/ping-service
-go build -o bin/ping-service cmd/main.go
+cd applications/stock-service
+go build -o bin/stock-service cmd/main.go
 
 # Run locally
 export SYMBOL=MSFT
 export NDAYS=7
 export APIKEY=C227WD9W3LUVKVV9
-./bin/ping-service
+./bin/stock-service
 ```
 
 ### Docker Build
 ```bash
-cd applications/ping-service
-docker build -t ping-service:latest .
+cd applications/stock-service
+docker build -t stock-service:latest .
 ```
 
 ### Kubernetes Deployment
@@ -138,9 +138,9 @@ docker build -t ping-service:latest .
 kubectl apply -k applications/overlays/dev/
 
 # Verify deployment
-kubectl get pods -n dev -l app=ping-service
-kubectl get svc -n dev ping-service
-kubectl get ingress -n dev ping-service
+kubectl get pods -n dev -l app=stock-service
+kubectl get svc -n dev stock-service
+kubectl get ingress -n dev stock-service
 ```
 
 ### Configuration

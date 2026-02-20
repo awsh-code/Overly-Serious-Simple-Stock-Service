@@ -20,22 +20,15 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: stock-service-config
         env:
-        - name: SYMBOL
-          value: "MSFT"
-        - name: NDAYS
-          value: "7"
-        - name: PORT
-          value: "8080"
         - name: APIKEY
           valueFrom:
             secretKeyRef:
               name: stock-service-secret
               key: apikey
-        - name: CACHE_TTL
-          value: "300"
-        - name: CIRCUIT_BREAKER_TIMEOUT
-          value: "30s"
         resources:
           requests:
             cpu: 100m

@@ -296,15 +296,15 @@ helm upgrade stock-service ./charts/stock-service \
 Import the provided dashboards:
 
 1. **Golden Signals Dashboard** (`monitoring/dashboards/golden-signals.json`)
-2. **Ping Service Dashboard** (`monitoring/dashboards/ping-service.json`)
+2. **Stock Service Dashboard** (`monitoring/dashboards/stock-service.json`)
 
 ### Key Metrics to Monitor
 
 - **Request Rate**: `rate(http_requests_total[5m])`
 - **Error Rate**: `rate(http_requests_total{status=~"5.."}[5m])`
 - **Latency**: `histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))`
-- **Circuit Breaker State**: `ping_service_circuit_breaker_state`
-- **Cache Hit Rate**: `rate(ping_service_cache_hits_total[5m]) / (rate(ping_service_cache_hits_total[5m]) + rate(ping_service_cache_misses_total[5m]))`
+- **Circuit Breaker State**: `stock_service_circuit_breaker_state`
+- **Cache Hit Rate**: `rate(stock_service_cache_hits_total[5m]) / (rate(stock_service_cache_hits_total[5m]) + rate(stock_service_cache_misses_total[5m]))`
 
 ## Security Considerations
 
