@@ -2,50 +2,20 @@
 
 A production-grade stock ticker microservice that provides stock price data with built-in monitoring, caching, and fault tolerance.
 
-## 🌐 Live Demo
+## 🌐 Service Overview
 
-**🚀 See it in action on our production cluster:**
+A production-grade stock ticker microservice that provides stock price data with built-in monitoring, caching, and fault tolerance.
 
-### 🚀 API Endpoints
-| Service | URL | Description |
-|---------|-----|-------------|
-| **Stock Service**      | [http://ping-service.46.225.33.158.nip.io/](http://ping-service.46.225.33.158.nip.io/) | Main API endpoint (default: MSFT) |
-| **Scalar Docs**        | [http://ping-service.46.225.33.158.nip.io/docs](http://ping-service.46.225.33.158.nip.io/docs) | Interactive API docs |
-| **Prometheus Metrics**   | [http://ping-service.46.225.33.158.nip.io/metrics](http://ping-service.46.225.33.158.nip.io/metrics) | Live application metrics |
-| **Health Check**         | [http://ping-service.46.225.33.158.nip.io/health](http://ping-service.46.225.33.158.nip.io/health) | Service liveness probe |
-| **Circuit Breaker**      | [http://ping-service.46.225.33.158.nip.io/circuit-breaker](http://ping-service.46.225.33.158.nip.io/circuit-breaker) | Circuit Breaker Status |
+### 📊 Monitoring & Golden Signals
 
-### 📊 Observability & Monitoring
-| Dashboard | URL | Description | Credentials |
-|-----------|-----|-------------|-------------|
-| **Grafana Main**         | [http://grafana.46.225.33.158.nip.io](http://grafana.46.225.33.158.nip.io) | Main Grafana interface | `demo` / `mJolOtJL8o5Umhu5tmqIya` |
-| **Golden Signals**       | [http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals](http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals) | **The Four Golden Signals** | `demo` / `mJolOtJL8o5Umhu5tmqIya` |
-| **Service Metrics**      | [http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard](http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard) | Detailed service performance | `demo` / `mJolOtJL8o5Umhu5tmqIya` |
+This service implements the **Four Golden Signals** for comprehensive observability:
 
-#### 🎯 What are the Four Golden Signals?
-The **Golden Signals** are the four most important metrics for monitoring any production system:
+- **Latency**: Request duration tracking (including errors)
+- **Traffic**: Requests per second monitoring  
+- **Errors**: Failed request rate tracking (4xx, 5xx, timeouts)
+- **Saturation**: Resource utilization monitoring (CPU, memory, disk, network)
 
-- **Latency**: How long requests take to complete (including errors)
-- **Traffic**: How many requests per second your system is handling  
-- **Errors**: The rate of failed requests (4xx, 5xx, timeouts)
-- **Saturation**: How close your system is to being overloaded (CPU, memory, disk, network)
-
-These signals provide a complete picture of system health and are essential for:
-- **Capacity Planning**: Understanding when to scale
-- **Incident Response**: Quickly identifying what's broken
-- **Performance Optimization**: Finding bottlenecks
-- **SLA Compliance**: Meeting service level objectives
-
-**📊 Try our stress testing:**
-```bash
-# Quick 60-second load test
-curl -s http://ping-service.46.225.33.158.nip.io/metrics | grep cache
-
-# Full stress test (clone repo first)
-git clone https://github.com/awsh-code/Overly-Serious-Simple-Stock-Service.git
-cd Overly-Serious-Simple-Stock-Service
-./scripts/quick-stress.sh
-```
+These metrics provide complete system health visibility for capacity planning, incident response, performance optimization, and SLA compliance.
 
 ## 🚀 Quick Start
 
