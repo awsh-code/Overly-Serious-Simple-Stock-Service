@@ -11,8 +11,8 @@ This service provides stock price data through a REST API with built-in observab
 ### 🚀 API Endpoints
 | Service | URL | Description |
 |---------|-----|-------------|
+| **🎯 Scalar Docs**        | [http://ping-service.46.225.33.158.nip.io/docs](http://ping-service.46.225.33.158.nip.io/docs) | **Start Here** - Interactive API documentation |
 | **Stock Service**      | [http://ping-service.46.225.33.158.nip.io/](http://ping-service.46.225.33.158.nip.io/) | Main API endpoint (default: MSFT) |
-| **Scalar Docs**        | [http://ping-service.46.225.33.158.nip.io/docs](http://ping-service.46.225.33.158.nip.io/docs) | Interactive API docs |
 | **Prometheus Metrics**   | [http://ping-service.46.225.33.158.nip.io/metrics](http://ping-service.46.225.33.158.nip.io/metrics) | Live application metrics |
 | **Health Check**         | [http://ping-service.46.225.33.158.nip.io/health](http://ping-service.46.225.33.158.nip.io/health) | Service liveness probe |
 | **Circuit Breaker**      | [http://ping-service.46.225.33.158.nip.io/circuit-breaker](http://ping-service.46.225.33.158.nip.io/circuit-breaker) | Circuit Breaker Status |
