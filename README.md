@@ -6,8 +6,6 @@ A production-grade stock ticker microservice that demonstrates SRE excellence, r
 
 **🚀 See it in action on our production cluster:**
 
-| Service | URL | Description |
-|---------|-----|-------------|
 ### 🚀 API Endpoints
 | Service | URL | Description |
 |---------|-----|-------------|
@@ -18,13 +16,11 @@ A production-grade stock ticker microservice that demonstrates SRE excellence, r
 | **Circuit Breaker**      | [http://ping-service.46.225.33.158.nip.io/circuit-breaker](http://ping-service.46.225.33.158.nip.io/circuit-breaker) | Circuit Breaker Status |
 
 ### 📊 Observability & Monitoring
-| Dashboard | URL | Description |
-|-----------|-----|-------------|
-| **Grafana Main**         | [http://grafana.46.225.33.158.nip.io](http://grafana.46.225.33.158.nip.io) | Main Grafana interface |
-| **Golden Signals**       | [http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals](http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals) | **The Four Golden Signals** |
-| **Service Metrics**      | [http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard](http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard) | Detailed service performance |
-
-**🔐 Demo Credentials**: `demo` / `mJolOtJL8o5Umhu5tmqIya`
+| Dashboard | URL | Description | Credentials |
+|-----------|-----|-------------|-------------|
+| **Grafana Main**         | [http://grafana.46.225.33.158.nip.io](http://grafana.46.225.33.158.nip.io) | Main Grafana interface | `demo` / `mJolOtJL8o5Umhu5tmqIya` |
+| **Golden Signals**       | [http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals](http://grafana.46.225.33.158.nip.io/d/308a147c-c6ef-47f7-92b0-143145813ce3/ping-service-golden-signals) | **The Four Golden Signals** | `demo` / `mJolOtJL8o5Umhu5tmqIya` |
+| **Service Metrics**      | [http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard](http://grafana.46.225.33.158.nip.io/d/92e1bab9-9ef6-4ec8-8952-61c46bbabad6/ping-service-dashboard) | Detailed service performance | `demo` / `mJolOtJL8o5Umhu5tmqIya` |
 
 #### 🎯 What are the Four Golden Signals?
 The **Golden Signals** are the four most important metrics for monitoring any production system, as defined by Google's SRE practices:
