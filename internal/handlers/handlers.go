@@ -41,6 +41,17 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	// Readiness check endpoint  
 	router.HandleFunc("/ready", h.readyHandler).Methods("GET")
 	
+	// Metrics endpoint
+	router.Handle("/metrics", promhttp.Handler())
+
+	// Documentation
+	router.HandleFunc("/docs", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "./docs/index.html")
+	})
+	router.HandleFunc("/swagger.yaml", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "./docs/swagger.yaml")
+	})
+
 	// Main stock endpoint
 	router.HandleFunc("/", h.stockHandler).Methods("GET")
 	
@@ -49,17 +60,6 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 	
 	// Stock symbol with days endpoint
 	router.HandleFunc("/{symbol}/{days}", h.stockSymbolDaysHandler).Methods("GET")
-	
-	// Metrics endpoint
-	router.Handle("/metrics", promhttp.Handler())
-	
-	// Documentation
-	router.HandleFunc("/docs", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "./docs/index.html")
-	})
-	router.HandleFunc("/swagger.yaml", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "./docs/swagger.yaml")
-	})
 }
 
 // Health check endpoint
