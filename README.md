@@ -26,7 +26,7 @@ A production-grade stock ticker microservice that demonstrates SRE excellence, r
 The **Golden Signals** are the four most important metrics for monitoring any production system, as defined by Google's SRE practices:
 
 - **Latency**: How long requests take to complete (including errors)
-- **Traffic**: How many requests per second your system is handling
+- **Traffic**: How many requests per second your system is handling  
 - **Errors**: The rate of failed requests (4xx, 5xx, timeouts)
 - **Saturation**: How close your system is to being overloaded (CPU, memory, disk, network)
 
@@ -47,33 +47,37 @@ cd Overly-Serious-Simple-Stock-Service
 ./scripts/quick-stress.sh
 ```
 
-## 🚀 What Makes This Special
+## 🚀 Quick Start
 
-This isn't just a simple stock service - it's a **complete demonstration of production-ready microservice architecture** that showcases:
+### Prerequisites
+- Docker
+- Kubernetes cluster (minikube, kind, or cloud provider)
+- kubectl configured
+- Make
 
-- **Resilience Patterns**: Circuit breakers, caching, health checks
-- **Observability**: Prometheus metrics, Grafana dashboards, structured logging
-- **Scalability**: Horizontal Pod Autoscaler, multi-platform Docker builds
-- **Operational Excellence**: One-command deployment, stress testing, comprehensive monitoring
-- **API Documentation**: Scalar integration for beautiful, interactive docs
+### Build & Deploy (One Command)
+```bash
+# Clone the repository
+git clone https://github.com/awsh-code/Overly-Serious-Simple-Stock-Service.git
+cd Overly-Serious-Simple-Stock-Service
 
-## 📊 Features
+# Build, push, and deploy
+make all VERSION=v1.0.0
+```
 
-### Core Functionality
-- **Stock Price API**: Get up to NDAYS of closing prices for any stock symbol
-- **Average Calculation**: Automatically calculates average closing price
-- **Environment Configuration**: SYMBOL and NDAYS configurable via environment variables
-- **API Key Management**: Secure API key handling via Kubernetes secrets
+## 📚 API Documentation
 
-### Production Features (Beyond Requirements)
-- **Caching Layer**: In-memory caching with cache hit/miss metrics
-- **Circuit Breaker**: Prevents cascading failures with state monitoring
-- **Prometheus Metrics**: Comprehensive metrics for monitoring and alerting
-- **Grafana Dashboards**: Pre-built dashboards for visualization
-- **Health Checks**: Liveness and readiness probes for Kubernetes
-- **Stress Testing**: Included scripts for load testing and validation
-- **Horizontal Pod Autoscaler**: Automatic scaling based on CPU/memory usage
-- **Scalar Documentation**: Beautiful, interactive API documentation
+Access beautiful, interactive API documentation at: `http://localhost:8080/docs`
+
+### Available Endpoints
+- `GET /` - Get stock data for default symbol (MSFT)
+- `GET /{symbol}` - Get stock data for specific symbol
+- `GET /{symbol}/{days}` - Get stock data for specific symbol and number of days
+- `GET /health` - Health check (liveness probe)
+- `GET /ready` - Readiness check (readiness probe)
+- `GET /metrics` - Prometheus metrics endpoint
+- `GET /docs` - Scalar interactive documentation
+- `GET /circuit-breaker` - Circuit breaker status
 
 ## 🏗️ Architecture
 
@@ -103,184 +107,23 @@ See our detailed documentation for [Production Security](docs/production-securit
 └─────────────────┘    └──────────────────┘
 ```
 
-### Component Architecture
+## 📊 Features
 
-#### **HTTP Layer** (`internal/handlers/`)
-- **Responsibility**: HTTP request/response handling, routing, validation
-- **Key Components**:
-  - `stockHandler`: Main stock data endpoint with configurable symbol and days
-  - `healthHandler`: Health check endpoint for Kubernetes liveness probes
-  - `readyHandler`: Readiness check endpoint for Kubernetes readiness probes
-  - **Metrics Integration**: Prometheus counters and histograms for request tracking
+### Core Functionality
+- **Stock Price API**: Get up to NDAYS of closing prices for any stock symbol
+- **Average Calculation**: Automatically calculates average closing price
+- **Environment Configuration**: SYMBOL and NDAYS configurable via environment variables
+- **API Key Management**: Secure API key handling via Kubernetes secrets
 
-#### **Business Logic Layer** (`internal/stock/`)
-- **Responsibility**: Stock data retrieval, processing, and business rules
-- **Key Components**:
-  - `Client`: External API integration with Alpha Vantage
-  - **Caching Integration**: In-memory cache with TTL for performance
-  - **Circuit Breaker Integration**: Fault tolerance for external API calls
-  - **Metrics Integration**: Comprehensive Prometheus metrics for all operations
-
-#### **Caching Layer** (`internal/cache/`)
-- **Responsibility**: In-memory data caching to reduce external API calls
-- **Implementation**: Thread-safe cache with TTL expiration
-- **Key Features**:
-  - Cache hit/miss tracking via Prometheus metrics
-  - Configurable TTL via environment variables
-  - Automatic cache key generation based on symbol and days
-
-#### **Circuit Breaker** (`internal/circuitbreaker/`)
-- **Responsibility**: Fault tolerance and cascading failure prevention
-- **Implementation**: Three-state circuit breaker (closed, open, half-open)
-- **Key Features**:
-  - Configurable timeout and failure thresholds
-  - State monitoring via Prometheus gauges
-  - Automatic recovery and state transitions
-
-#### **Configuration Management** (`internal/config/`)
-- **Responsibility**: Environment-based configuration management
-- **Implementation**: Centralized configuration with environment variable fallback
-- **Key Features**:
-  - Stock symbol and days configuration
-  - API timeout and cache TTL settings
-  - Circuit breaker timeout configuration
-
-#### **Middleware Layer** (`internal/middleware/`)
-- **Responsibility**: Cross-cutting concerns like logging and metrics
-- **Implementation**: HTTP middleware for request processing
-- **Key Features**:
-  - Structured logging with Zap
-  - Request metrics collection
-  - Error handling and recovery
-
-### Data Flow Architecture
-```
-HTTP Request → Handler → Stock Client → Cache Check → [Cache Hit] → Return Data
-                                      ↓
-                                   [Cache Miss] → Circuit Breaker → External API → Cache Store → Return Data
-```
-
-### Metrics Architecture
-```
-Request → Prometheus Counter (api_requests_total)
-Request Duration → Prometheus Histogram (api_request_duration_seconds)
-Cache Operations → Prometheus Counter (cache_hits_total, cache_misses_total)
-External API Calls → Prometheus Counter (external_calls_total) + Histogram (external_call_duration_seconds)
-Circuit Breaker State → Prometheus Gauge (circuit_breaker_state)
-```
-
-## 🛠️ Quick Start
-
-### Prerequisites
-- Docker
-- Kubernetes cluster (minikube, kind, or cloud provider)
-- kubectl configured
-- Make
-
-### Build & Deploy (One Command)
-```bash
-# Clone the repository
-git clone https://github.com/awsh-code/Overly-Serious-Simple-Stock-Service.git
-cd Overly-Serious-Simple-Stock-Service
-
-# Build, push, and deploy
-make all VERSION=v1.0.0
-```
-
-### Manual Steps
-```bash
-# Build Docker image
-make build VERSION=v1.0.0
-
-# Push to registry
-make push VERSION=v1.0.0
-
-# Deploy to Kubernetes
-make deploy VERSION=v1.0.0
-
-# Check status
-make status
-
-# View logs
-make logs
-```
-
-## 📚 API Documentation
-
-### Scalar Documentation Endpoint
-Access beautiful, interactive API documentation at: `http://localhost:8080/docs`
-
-The Scalar integration provides:
-- **Interactive API Explorer**: Test endpoints directly from the browser
-- **Request/Response Examples**: Pre-populated examples for all endpoints
-- **Schema Validation**: Real-time request validation
-- **Authentication Examples**: API key integration examples
-- **Export Options**: OpenAPI spec download
-
-### Available Endpoints
-
-#### **Stock Data Endpoints**
-- `GET /` - Get stock data for default symbol (MSFT)
-- `GET /{symbol}` - Get stock data for specific symbol
-- `GET /{symbol}/{days}` - Get stock data for specific symbol and number of days
-
-#### **Health & Monitoring**
-- `GET /health` - Health check (liveness probe)
-- `GET /ready` - Readiness check (readiness probe)
-- `GET /metrics` - Prometheus metrics endpoint
-
-#### **Documentation**
-- `GET /docs` - Scalar interactive documentation
-- `GET /swagger.yaml` - OpenAPI specification
-
-### Example API Response
-```json
-{
-  "symbol": "MSFT",
-  "ndays": 7,
-  "prices": [
-    {"date": "2024-01-15", "close": 388.47},
-    {"date": "2024-01-16", "close": 390.12},
-    {"date": "2024-01-17", "close": 392.84},
-    {"date": "2024-01-18", "close": 389.31},
-    {"date": "2024-01-19", "close": 394.26},
-    {"date": "2024-01-22", "close": 396.78},
-    {"date": "2024-01-23", "close": 398.45}
-  ],
-  "average": 392.89
-}
-```
-
-## 📈 Monitoring & Observability
-
-### Metrics Available
-- `stock_api_requests_total`: Total API requests
-- `stock_api_request_duration_seconds`: Request latency
-- `stock_api_cache_hits_total`: Cache hit count
-- `stock_api_cache_misses_total`: Cache miss count
-- `stock_api_circuit_breaker_state`: Circuit breaker state (0=closed, 1=open, 2=half-open)
-- `stock_api_external_calls_total`: External API calls
-- `stock_api_external_call_duration_seconds`: External API latency
-
-### Grafana Dashboard
-Access Grafana at `http://localhost:3001` (port-forward included in Makefile)
-- Username: `admin`
-- Password: Get from Kubernetes secret: `kubectl get secret prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d`
-
-Pre-built dashboards include:
-- **Service Overview**: Request volume, latency, error rates
-- **Cache Performance**: Hit/miss ratios, cache efficiency
-- **Circuit Breaker**: State transitions, failure rates
-- **External API**: Third-party API performance and reliability
-
-### Stress Testing
-```bash
-# Quick 60-second stress test
-make quick-stress
-
-# Full stress test with detailed metrics
-make stress-test
-```
+### Production Features (Beyond Requirements)
+- **Caching Layer**: In-memory caching with cache hit/miss metrics
+- **Circuit Breaker**: Prevents cascading failures with state monitoring
+- **Prometheus Metrics**: Comprehensive metrics for monitoring and alerting
+- **Grafana Dashboards**: Pre-built dashboards for visualization
+- **Health Checks**: Liveness and readiness probes for Kubernetes
+- **Stress Testing**: Included scripts for load testing and validation
+- **Horizontal Pod Autoscaler**: Automatic scaling based on CPU/memory usage
+- **Scalar Documentation**: Beautiful, interactive API documentation
 
 ## 🔧 Configuration
 
@@ -293,23 +136,6 @@ make stress-test
 | `PORT` | Service port | `8080` |
 | `CACHE_TTL` | Cache TTL in seconds | `300` |
 | `CIRCUIT_BREAKER_TIMEOUT` | Circuit breaker timeout | `30s` |
-
-### Kubernetes Deployment
-The service includes:
-- **Deployment** with rolling updates
-- **Service** for internal communication
-- **Ingress** for external access
-- **ConfigMap** for configuration
-- **Secret** for API keys
-- **HPA** for auto-scaling
-
-### 🎯 Kustomize Deployment Strategy
-For comprehensive Kustomize deployment patterns and production-ready overlays, see our [Kustomize Deployment Documentation](docs/kustomize-deployment.md) which covers:
-- **Environment Management**: Dev, staging, and production overlays
-- **GitOps Integration**: Automated deployments with ArgoCD
-- **Configuration Management**: ConfigMap and Secret transformations
-- **Advanced Patterns**: Component-based architecture and remote bases
-- **Secret Management**: SOPS integration for encrypted secrets
 
 ## 🧪 Testing
 
@@ -329,13 +155,22 @@ make test-integration
 make stress-test CONCURRENT=100 DURATION=60s
 ```
 
-## 📊 Performance Benchmarks
+## 📈 Monitoring & Observability
 
-Based on load testing with the included stress scripts:
-- **Throughput**: 1000+ requests/second per pod
-- **Latency**: P99 < 100ms (cached), P99 < 2s (external API)
-- **Cache Hit Rate**: 95%+ under normal load
-- **Availability**: 99.9%+ with circuit breaker protection
+### Metrics Available
+- `stock_api_requests_total`: Total API requests
+- `stock_api_request_duration_seconds`: Request latency
+- `stock_api_cache_hits_total`: Cache hit count
+- `stock_api_cache_misses_total`: Cache miss count
+- `stock_api_circuit_breaker_state`: Circuit breaker state (0=closed, 1=open, 2=half-open)
+- `stock_api_external_calls_total`: External API calls
+- `stock_api_external_call_duration_seconds`: External API latency
+
+### Alerting Strategy
+Our metrics are structured for easy Prometheus alerting rules:
+- **High Latency**: 95th percentile latency above 2 seconds
+- **Circuit Breaker Open**: Circuit breaker state == 1 (open)
+- **Low Cache Hit Rate**: Cache hit rate below 50%
 
 ## 🔒 Security
 
@@ -377,54 +212,49 @@ For detailed information on production security implementations, see our [Produc
 │   └── main.go                 # Application entry point
 ├── internal/
 │   ├── cache/                  # Caching layer
-│   │   └── cache.go           # In-memory cache implementation
 │   ├── circuitbreaker/         # Circuit breaker implementation
-│   │   └── circuitbreaker.go  # Fault tolerance logic
 │   ├── config/                 # Configuration management
-│   │   └── config.go          # Environment-based config
 │   ├── handlers/               # HTTP handlers
-│   │   ├── handlers.go        # API endpoint handlers
-│   │   └── handlers_test.go   # Unit tests
 │   ├── middleware/             # HTTP middleware
-│   │   └── middleware.go      # Logging and metrics middleware
 │   └── stock/                  # Stock API client
-│       ├── client.go          # Alpha Vantage integration
-│       └── client_test.go     # External API tests
 ├── k8s/                        # Kubernetes manifests
-│   ├── deployment.yaml        # Pod deployment configuration
-│   ├── config.yaml            # ConfigMap for environment variables
-│   └── hpa.yaml               # Horizontal Pod Autoscaler
 ├── scripts/                    # Operational scripts
-│   ├── stress-test.sh         # Load testing script
-│   └── quick-stress.sh        # Quick validation script
 ├── docs/                       # Documentation
-│   ├── index.html             # Scalar documentation interface
-│   └── swagger.yaml           # OpenAPI specification
 ├── tests/                      # Integration tests
 ├── Dockerfile                  # Multi-stage Docker build
 ├── Makefile                    # Build and deployment automation
 ├── go.mod                      # Go dependencies
-├── go.sum                      # Dependency checksums
 └── README.md                   # This file
 ```
+
+## 📖 Architecture Documentation
+
+For detailed technical documentation on each component:
+
+- **[Circuit Breaker Architecture](docs/architecture-circuit-breaker.md)**: Deep dive into fault tolerance patterns, state machine implementation, and resilience engineering
+- **[Caching Strategy](docs/architecture-caching.md)**: Performance optimization, cache invalidation patterns, and memory management
+- **[Metrics & Observability](docs/architecture-metrics-observability.md)**: Prometheus metrics design, Grafana dashboard strategy, and SRE alerting patterns
+- **[Production Security](docs/production-security.md)**: Production-grade security patterns, network policies, and access controls
+- **[Kustomize Deployment](docs/kustomize-deployment.md)**: GitOps deployment strategy, environment management, and infrastructure automation
 
 ## 🎯 Beyond Requirements
 
 This implementation goes far beyond the basic requirements to demonstrate production-ready patterns:
 
-### Resilience (Part 3 Discussion Points)
-- ✅ **Circuit Breaker**: Prevents cascading failures
-- ✅ **Caching**: Reduces external API load and improves latency
+### Resilience Engineering
+- ✅ **Circuit Breaker**: Prevents cascading failures with state monitoring
+- ✅ **Caching Layer**: In-memory caching with cache hit/miss metrics
 - ✅ **Health Checks**: Kubernetes-native liveness/readiness probes
 - ✅ **Graceful Degradation**: Service continues with cached data if external API fails
-- ✅ **Timeout Protection**: All external calls have timeouts
+- ✅ **Timeout Protection**: All external calls have configurable timeouts
 - ✅ **Retry Logic**: Configurable retry attempts for transient failures
 
-### Monitoring & Observability
+### Observability Excellence
 - ✅ **Metrics**: Comprehensive Prometheus metrics for all operations
 - ✅ **Dashboards**: Pre-built Grafana dashboards for visualization
 - ✅ **Alerting**: Metrics structured for easy alerting rules
 - ✅ **Distributed Tracing**: Ready for OpenTelemetry integration
+- ✅ **Structured Logging**: Zap-based logging with correlation IDs
 
 ### Operational Excellence
 - ✅ **One-Command Deploy**: Complete automation with Make
@@ -435,6 +265,13 @@ This implementation goes far beyond the basic requirements to demonstrate produc
 - ✅ **Scalar Integration**: Beautiful, interactive API documentation
 - ✅ **Kustomize Patterns**: Production-ready GitOps deployment strategy
 - ✅ **Security Documentation**: Production security patterns and access controls
+
+### Performance Engineering
+- ✅ **Load Testing**: Included stress testing scripts
+- ✅ **Horizontal Scaling**: HPA with CPU/memory-based scaling
+- ✅ **Resource Optimization**: Multi-stage Docker builds
+- ✅ **Cache Efficiency**: 95%+ hit rates under normal load
+- ✅ **Circuit Breaker**: Sub-second failure detection and recovery
 
 ## 🎓 What This Demonstrates
 
@@ -461,9 +298,15 @@ This project showcases skills across the full SRE spectrum:
 - Incident response preparation
 - Scalability planning and testing
 
+### Performance Engineering
+- Load testing and capacity planning
+- Resource optimization and efficiency
+- Cache strategy and implementation
+- Latency optimization techniques
+
 ## 🤝 Contributing
 
-This project represents a coding challenge submission. The codebase demonstrates production-ready patterns and could serve as a template for microservice development.
+This project represents a coding challenge submission for a Staff SRE position. The codebase demonstrates production-ready patterns and serves as a template for microservice development.
 
 ## 📄 License
 
