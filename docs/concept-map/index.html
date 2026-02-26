@@ -992,7 +992,7 @@ kubectl get ingress -n stock-service
     <script>
         // Initialize Mermaid
         mermaid.initialize({ 
-            startOnLoad: true,
+            startOnLoad: false,
             theme: 'default',
             flowchart: {
                 useMaxWidth: true,
@@ -1032,6 +1032,15 @@ kubectl get ingress -n stock-service
 
         // Add smooth scrolling and interactive elements
         document.addEventListener('DOMContentLoaded', function() {
+            // Initial render for the active section
+            const initialActiveSection = document.querySelector('.content-section.active');
+            if (initialActiveSection) {
+                const mermaidElements = initialActiveSection.querySelectorAll('.mermaid');
+                if (mermaidElements.length) {
+                    mermaid.init(undefined, mermaidElements);
+                }
+            }
+
             // Add click handlers to feature cards
             const featureCards = document.querySelectorAll('.feature-card');
             featureCards.forEach(card => {
