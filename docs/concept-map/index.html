@@ -195,12 +195,13 @@
             <h1>🚀 Overly-Serious-Simple-Stock-Service</h1>
             <p>Production-Ready Microservice Architecture Concept Map</p>
             <div class="nav-buttons">
-                <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
-                <button class="nav-btn" onclick="showSection('architecture')">Architecture</button>
-                <button class="nav-btn" onclick="showSection('components')">Components</button>
-                <button class="nav-btn" onclick="showSection('flow')">Data Flow</button>
-                <button class="nav-btn" onclick="showSection('deployment')">Deployment</button>
-                <button class="nav-btn" onclick="showSection('monitoring')">Monitoring</button>
+                <button class="nav-btn active" onclick="showSection('overview', event)">Overview</button>
+                <button class="nav-btn" onclick="showSection('architecture', event)">Architecture</button>
+                <button class="nav-btn" onclick="showSection('components', event)">Components</button>
+                <button class="nav-btn" onclick="showSection('flow', event)">Data Flow</button>
+                <button class="nav-btn" onclick="showSection('kubernetes', event)">Kubernetes</button>
+                <button class="nav-btn" onclick="showSection('deployment', event)">Deployment</button>
+                <button class="nav-btn" onclick="showSection('monitoring', event)">Monitoring</button>
             </div>
         </div>
 
@@ -672,6 +673,320 @@ ping_service_api_request_duration_seconds
                 </div>
             </div>
         </div>
+
+        <!-- Kubernetes Section -->
+        <div id="kubernetes" class="content-section">
+            <h2>☸️ Kubernetes Configuration & Strategy</h2>
+
+            <div class="architecture-section">
+                <h3>🎯 Deployment Architecture</h3>
+                <p>The service follows Kubernetes best practices with comprehensive resource management, security contexts, and health monitoring.</p>
+                
+                <div class="mermaid-container">
+                    <div class="mermaid">
+                        graph TD
+                        subgraph "Kubernetes Resources"
+                            A[Deployment] --> B[ReplicaSet]
+                            B --> C[Pod]
+                            C --> D[Container]
+                            
+                            E[Service] --> C
+                            F[HPA] --> A
+                            G[ConfigMap] --> C
+                            H[Secret] --> C
+                            I[Ingress] --> E
+                        end
+                        
+                        subgraph "Monitoring"
+                            J[Liveness Probe] --> C
+                            K[Readiness Probe] --> C
+                            L[Metrics] --> M[Prometheus]
+                        end
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>📋 Deployment Configuration</h3>
+                    <p><strong>File:</strong> <code>k8s/deployment.yaml</code></p>
+                    <p><strong>Key Features:</strong></p>
+                    <ul>
+                        <li>2 replica minimum for high availability</li>
+                        <li>Resource requests/limits for QoS</li>
+                        <li>Security context with non-root user</li>
+                        <li>Health and readiness probes</li>
+                        <li>Secret and ConfigMap integration</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🔄 Horizontal Pod Autoscaler</h3>
+                    <p><strong>File:</strong> <code>k8s/hpa.yaml</code></p>
+                    <p><strong>Scaling Strategy:</strong></p>
+                    <ul>
+                        <li>CPU threshold: 70% utilization</li>
+                        <li>Memory threshold: 80% utilization</li>
+                        <li>Scale up: 50% per 30 seconds</li>
+                        <li>Scale down: 10% per 60 seconds</li>
+                        <li>Stabilization window: 5 minutes</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🌐 Service & Ingress</h3>
+                    <p><strong>Files:</strong> <code>k8s/service.yaml</code>, <code>k8s/ingress.yaml</code></p>
+                    <p><strong>Network Configuration:</strong></p>
+                    <ul>
+                        <li>ClusterIP service for internal routing</li>
+                        <li>NGINX Ingress controller integration</li>
+                        <li>TLS termination with cert-manager</li>
+                        <li>Path-based routing rules</li>
+                        <li>Load balancing across pods</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>⚙️ Configuration Management</h3>
+                    <p><strong>Files:</strong> <code>k8s/config.yaml</code>, <code>k8s/secret.yaml</code></p>
+                    <p><strong>Configuration Strategy:</strong></p>
+                    <ul>
+                        <li>ConfigMap for non-sensitive configuration</li>
+                        <li>Secret for API keys and sensitive data</li>
+                        <li>Environment variable injection</li>
+                        <li>Configuration validation</li>
+                        <li>Hot-reload capabilities</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>🔧 Deployment Configuration</h3>
+                <div class="code-block">
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stock-service
+  labels:
+    app: stock-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: stock-service
+  template:
+    metadata:
+      labels:
+        app: stock-service
+    spec:
+      containers:
+      - name: stock-service
+        image: codyadkinsdev/stock-service:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: stock-service-config
+        env:
+        - name: APIKEY
+          valueFrom:
+            secretKeyRef:
+              name: stock-service-secret
+              key: apikey
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+                </div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>📈 Horizontal Pod Autoscaler</h3>
+                <div class="code-block">
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: stock-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: stock-service
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 30
+                </div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>🎯 Helm Chart Strategy</h3>
+                <p><strong>Production-Ready Helm Charts:</strong></p>
+                <div class="code-block">
+# Helm values.yaml configuration
+replicaCount: 3
+
+image:
+  repository: ghcr.io/awsh-code/stock-service
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podSecurityContext:
+  fsGroup: 2000
+  runAsNonRoot: true
+  runAsUser: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    path: /metrics
+                </div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>🚀 Deployment Commands</h3>
+                <div class="code-block">
+# Direct Kubernetes deployment
+kubectl apply -f k8s/config.yaml
+kubectl apply -f k8s/secret.yaml
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+kubectl apply -f k8s/hpa.yaml
+kubectl apply -f k8s/ingress.yaml
+
+# Helm deployment (Recommended)
+helm install stock-service ./charts/stock-service \
+  --namespace stock-service \
+  --create-namespace \
+  --set config.stockAPI.apiKey=YOUR_API_KEY \
+  --set replicaCount=3 \
+  --set autoscaling.enabled=true \
+  --set monitoring.enabled=true
+
+# Verify deployment
+kubectl get pods -n stock-service
+kubectl get svc -n stock-service
+kubectl get hpa -n stock-service
+kubectl get ingress -n stock-service
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>🎯 Best Practices Implemented:</strong>
+                <ul>
+                    <li><strong>Security:</strong> Non-root containers, read-only filesystem, dropped capabilities</li>
+                    <li><strong>Resource Management:</strong> Proper requests/limits for QoS class</li>
+                    <li><strong>Health Monitoring:</strong> Comprehensive liveness and readiness probes</li>
+                    <li><strong>Scalability:</strong> Intelligent HPA with multiple metrics and stabilization</li>
+                    <li><strong>Configuration:</strong> Separation of config and secrets with proper injection</li>
+                </ul>
+            </div>
+
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    graph TD
+                    subgraph "Deployment Strategy"
+                        A[Helm Chart] --> B[Templates]
+                        B --> C[Deployment]
+                        B --> D[Service]
+                        B --> E[HPA]
+                        B --> F[Ingress]
+                        
+                        G[Values.yaml] --> A
+                        H[ConfigMap] --> C
+                        I[Secret] --> C
+                    end
+                    
+                    subgraph "Runtime Behavior"
+                        C --> J[Pod Creation]
+                        J --> K[Health Checks]
+                        K --> L[Service Registration]
+                        L --> M[Load Balancing]
+                        M --> N[Traffic Routing]
+                    end
+                    
+                    subgraph "Scaling Logic"
+                        O[Metrics Server] --> P[CPU/Memory Metrics]
+                        P --> E
+                        E --> Q[Scale Decision]
+                        Q --> R[Pod Addition/Removal]
+                    end
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -686,7 +1001,7 @@ ping_service_api_request_duration_seconds
         });
 
         // Navigation functionality
-        function showSection(sectionId) {
+        function showSection(sectionId, event) {
             // Hide all sections
             const sections = document.querySelectorAll('.content-section');
             sections.forEach(section => {
@@ -707,8 +1022,12 @@ ping_service_api_request_duration_seconds
 
             // Re-render mermaid diagrams in the active section
             setTimeout(() => {
-                mermaid.init();
-            }, 100);
+                const container = document.getElementById(sectionId);
+                const mermaidElements = container.querySelectorAll('.mermaid');
+                if (mermaidElements.length) {
+                    mermaid.init(undefined, mermaidElements);
+                }
+            }, 10);
         }
 
         // Add smooth scrolling and interactive elements
@@ -738,7 +1057,7 @@ ping_service_api_request_duration_seconds
 
         // Add keyboard navigation
         document.addEventListener('keydown', function(e) {
-            const sections = ['overview', 'architecture', 'components', 'flow', 'deployment', 'monitoring'];
+            const sections = ['overview', 'architecture', 'components', 'flow', 'kubernetes', 'deployment', 'monitoring'];
             const currentSection = document.querySelector('.content-section.active').id;
             const currentIndex = sections.indexOf(currentSection);
             
